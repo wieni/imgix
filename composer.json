@@ -1,0 +1,12 @@
+{
+    "name": "drupal/imgix",
+    "require": {
+        "imgix/imgix-php": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "Thiago Régis",
+            "email": "tregis@fisqua.com"
+        }
+    ]
+}
