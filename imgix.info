@@ -1,1 +1,3 @@
-name = imgix - Real-time image processing and CDN
+name = Imgix Integration
+description = Integrates with Imgix, a real-time image processing and CDN.
+core = 7.x
