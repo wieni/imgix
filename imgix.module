@@ -1,7 +1,5 @@
 <?php
 
-use Imgix\UrlBuilder;
-
 /**
  * Implements hook_menu().
  */
@@ -40,6 +38,12 @@ function imgix_admin() {
     ),
     '#required' => TRUE,
     '#default_value' => variable_get('imgix_mapping', 'webfolder'),
+  );
+
+  $form['imgix_https'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('HTTPS support'),
+    '#default_value' => variable_get('imgix_https', FALSE),
   );
 
   $form['imgix_secure_url'] = array(
