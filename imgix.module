@@ -1,5 +1,7 @@
 <?php
 
+module_load_include('inc', 'imgix', 'imgix');
+
 /**
  * Implements hook_menu().
  */
