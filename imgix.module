@@ -7,8 +7,8 @@ module_load_include('inc', 'imgix', 'imgix');
  */
 function imgix_menu() {
   $items['admin/config/services/imgix'] = array(
-    'title' => t('Imgix'),
-    'description' => t('Administration page to setup Imgix integration.'),
+    'title' => t('Imgix Integration'),
+    'description' => t('Configuration page to setup Imgix Integration.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('imgix_admin'),
     'access arguments' => array('administer imgix settings'),
