@@ -18,3 +18,15 @@ function imgix_menu() {
 
   return $items;
 }
+
+/**
+ * Implements hook_permission().
+ */
+function imgix_permission() {
+  return array(
+    'administer imgix settings' =>  array(
+      'title' => t('Administer Imgix Integration settings.'),
+      'description' => t('Allow users to setup Imgix Integration.'),
+    ),
+  );
+}
