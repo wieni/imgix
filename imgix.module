@@ -46,6 +46,14 @@ function imgix_admin() {
     '#type' => 'checkbox',
     '#title' => t('Secure URL'),
     '#default_value' => variable_get('imgix_secure_url', FALSE),
+    '#states' => array(
+      'checked' => array(
+        ':input[name="imgix_mapping"]' => array('value' => 'webproxy'),
+      ),
+      'required' => array(
+        ':input[name="imgix_mapping"]' => array('value' => 'webproxy'),
+      ),
+    ),
   );
 
   $form['imgix_secure_url_token'] = array(
@@ -56,6 +64,7 @@ function imgix_admin() {
     '#states' => array(
       'visible' => array(
         ':input[name="imgix_secure_url"]' => array('checked' => TRUE),
+        ':input[name="imgix_mapping"]' => array('value' => 'webproxy'),
       ),
     ),
   );
