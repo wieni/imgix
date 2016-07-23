@@ -30,3 +30,39 @@ function imgix_permission() {
     ),
   );
 }
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function imgix_theme_registry_alter(&$theme_registry) {
+  // Overrides theme_image().
+  if (isset($theme_registry['image'])) {
+    $theme_registry['image']['function'] = 'imgix_theme_image';
+  }
+}
+
+/**
+ * Overrides theme_image() to return the Imgix URL for images.
+ */
+function imgix_theme_image($variables) {
+  $attributes = $variables['attributes'];
+  $attributes['src'] = file_create_url($variables['path']);
+
+  foreach (array('width', 'height', 'alt', 'title') as $key) {
+    if (isset($variables[$key])) {
+      $attributes[$key] = $variables[$key];
+    }
+  }
+
+  // Overrides image URL as Imgix URL.
+  if (variable_get('imgix_enable')) {
+    $params = array(
+      'w' => $attributes['width'],
+      'h' => $attributes['height']
+    );
+
+    $attributes['src'] = imgix_build_url($attributes['src'], $params);
+  }
+
+  return '<img' . drupal_attributes($attributes) . ' />';
+}
