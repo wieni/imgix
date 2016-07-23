@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function imgix_uninstall() {
+  // Delete all the imgix variables.
+  db_query("DELETE FROM {variable} WHERE name LIKE 'imgix_%'");
+}
