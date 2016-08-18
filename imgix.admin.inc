@@ -56,7 +56,7 @@ function imgix_admin() {
 
   $form['imgix_settings']['mapping']['imgix_mapping_url'] = array(
     '#type' => 'textfield',
-    '#required' => TRUE,
+    '#description' => t('Leave blank to get the current base URL.'),
     '#title' => t('Base URL'),
     '#default_value' => variable_get('imgix_mapping_url'),
   );
