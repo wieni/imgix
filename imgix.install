@@ -7,3 +7,24 @@ function imgix_uninstall() {
   // Delete all the imgix variables.
   db_query("DELETE FROM {variable} WHERE name LIKE 'imgix_%'");
 }
+
+/**
+ * Rename variables.
+ */
+function imgix_update_7100() {
+  // old => new
+  $variables = array(
+    'imgix_domain' => 'imgix_source_domain',
+    'imgix_mapping' => 'imgix_mapping_type',
+  );
+
+  foreach ($variables as $old => $new) {
+    // Set new variable.
+    variable_set($new, variable_get($old));
+
+    // Delete old variable.
+    variable_del($old);
+  }
+
+  return t('All variables were successfully renamed.');
+}
