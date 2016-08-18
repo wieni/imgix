@@ -24,48 +24,59 @@ function imgix_admin() {
     ),
   );
 
-  $form['imgix_settings']['imgix_domain'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Domain'),
-    '#default_value' => variable_get('imgix_domain'),
+  $form['imgix_settings']['source'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Source'),
+    '#collapsible' => FALSE,
   );
 
-  $form['imgix_settings']['imgix_mapping'] = array(
-    '#type' => 'radios',
+  $form['imgix_settings']['source']['imgix_source_domain'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Domain'),
+    '#default_value' => variable_get('imgix_source_domain'),
+  );
+
+  $form['imgix_settings']['mapping'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Mapping'),
+    '#collapsible' => FALSE,
+  );
+
+  $form['imgix_settings']['mapping']['imgix_mapping_type'] = array(
+    '#type' => 'radios',
+    '#required' => TRUE,
+    '#title' => t('Type'),
     '#options' => array(
       'webfolder' => 'Web Folder',
       'webproxy' => 'Web Proxy'
     ),
-    '#default_value' => variable_get('imgix_mapping', 'webfolder'),
+    '#default_value' => variable_get('imgix_mapping_type', 'webfolder'),
   );
 
-  $form['imgix_settings']['imgix_https'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('HTTPS support'),
-    '#default_value' => variable_get('imgix_https', FALSE),
+  $form['imgix_settings']['mapping']['imgix_mapping_url'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Base URL'),
+    '#default_value' => variable_get('imgix_mapping_url'),
   );
 
-  $form['imgix_settings']['imgix_secure_url'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Secure URL'),
-    '#default_value' => variable_get('imgix_secure_url', FALSE),
-    '#states' => array(
-      'checked' => array(
-        ':input[name="imgix_mapping"]' => array('value' => 'webproxy'),
-      ),
-    ),
+  $form['imgix_settings']['security'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Security'),
+    '#collapsible' => FALSE,
   );
 
-  $form['imgix_settings']['imgix_secure_url_token'] = array(
+  $form['imgix_settings']['security']['imgix_secure_url_token'] = array(
     '#type' => 'textfield',
     '#title' => t('Secure URL Token'),
     '#default_value' => variable_get('imgix_secure_url_token'),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="imgix_secure_url"]' => array('checked' => TRUE),
-      ),
-    ),
+  );
+
+  $form['imgix_settings']['security']['imgix_https'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('HTTPS support'),
+    '#default_value' => variable_get('imgix_https', FALSE),
   );
 
   return system_settings_form($form);
