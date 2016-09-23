@@ -5,28 +5,3 @@ imgix.settings.form:
     _title: 'Settings'
   requirements:
     _permission: 'administer imgix'
-
-imgix.presets:
-  path: '/admin/config/media/imgix/presets'
-  defaults:
-    _controller: '\Drupal\imgix\Controller\ImgixSettings::overview'
-    _title: 'Presets'
-  requirements:
-    _permission: 'administer imgix'
-
-imgix.presets.add:
-  path: '/admin/config/imgix/presets/add/{key}'
-  defaults:
-    _form: '\Drupal\imgix\Form\ImgixPresetAddForm'
-    _title: 'Add preset'
-    key: null
-  requirements:
-    _permission: 'administer imgix'
-
-imgix.presets.delete:
-  path: '/admin/config/imgix/presets/delete/{key}'
-  defaults:
-    _form: '\Drupal\imgix\Form\ImgixPresetDeleteForm'
-    _title: 'Delete preset'
-  requirements:
-    _permission: 'administer imgix'

@@ -136,7 +136,7 @@ class ImgixStyles implements ImgixStylesInterface {
         break;
 
       case 'webproxy':
-        // TODO Untested.
+        // Full url for webproxy. The url gets encoded later on
         $final_path = file_create_url($uri);
         break;
 

@@ -11,9 +11,6 @@ imgix.settings:
         source_domain:
           label: 'Domain'
           type: string
-        # 'webfolder' => 'Web Folder',
-        # 'webproxy' => 'Web Proxy'
-        # 's3' => 'Amazon S3'
         mapping_type:
           label: 'Type'
           type: string
