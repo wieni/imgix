@@ -1,5 +1,0 @@
-name = Imgix Integration
-description = Integrates with Imgix, a real-time image processing and CDN.
-core = 7.x
-dependencies[] = composer_manager
-configure = admin/config/services/imgix
