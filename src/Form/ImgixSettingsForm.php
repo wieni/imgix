@@ -50,7 +50,7 @@ class ImgixSettingsForm extends ConfigFormBase {
   public function getFormId() {
     return 'imgix_settings_form';
   }
- 
+
   /**
    * Config names.
    *
