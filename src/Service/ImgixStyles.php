@@ -126,13 +126,9 @@ class ImgixStyles implements ImgixStylesInterface {
     // Final path depends on mapping type.
     switch ($this->config->get('mapping_type')) {
       case 's3':
-        // We quite lean on flysystem here since extra
-        // the bucket name of the s3 bucket here, which
-        // is incidentally the same as the imgix s3 source. Weird, right?
-        $source = str_replace('.imgix.net', '', $this->config->get('source_domain'));
-
-        // TODO Make further enquiries about this.
-        $final_path = str_replace('/' . $source, '', $full_path['path']);
+        // Strip out the bucket. Quite wobbly, this.
+        $bucket = explode('/', ltrim($full_path['path'], '/'))[0];
+        $final_path = '/' . ltrim(str_replace($bucket, '', $full_path['path']), '/');
         break;
 
       case 'webproxy':
