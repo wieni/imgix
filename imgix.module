@@ -81,3 +81,25 @@ function imgix_preprocess_imgix_image_style(&$variables) {
 
 
 }
+
+/**
+ * Create an imgix url to a file.
+ *
+ * @param $uri
+ *   The uri of the image file.
+ * @param null $style
+ *   The style to render.
+ *
+ * @return string
+ *   The url.
+ */
+function imgix_get_url($uri, $style = NULL) {
+    $url = file_create_url($uri);
+    
+    $imgix_styles = Drupal::service('imgix.styles');
+    
+    $imgix_styles->loadStyle($style);
+    $imgix_styles->loadImage($uri);
+    
+    return $imgix_styles->buildUrl();
+}
