@@ -218,7 +218,7 @@ class ImgixStyles implements ImgixStylesInterface {
         $params['w'] = $effect_config['width'];
         $params['h'] = $effect_config['height'];
         if ($effect_config['upscale']) {
-          $params['fit'] = 'max';
+          $params['fit'] = 'fill';
         }
         break;
 
