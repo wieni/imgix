@@ -4,3 +4,9 @@ imgix.settings:
   route_name: imgix.settings.form
   parent: system.admin_config_media
   weight: 20
+imgix.presets:
+  title: 'Presets'
+  description: 'Configure imgix'
+  route_name: imgix.presets
+  parent: imgix.settings
+  weight: 20

@@ -29,6 +29,13 @@ class ImgixStyles implements ImgixStylesInterface {
   protected $config;
 
   /**
+   * Config factory.
+   *
+   * @var ConfigFactoryInterface;
+   */
+  protected $presets;
+
+  /**
    * Image Factory.
    *
    * @var ImageFactory;
@@ -76,8 +83,16 @@ class ImgixStyles implements ImgixStylesInterface {
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->config = $config_factory->get('imgix.settings');
+    $this->presets = $config_factory->get('imgix.presets');
     $this->imageFactory = $imageFactory;
     $this->logger = $logger;
+  }
+
+  /**
+   * Inherit.
+   */
+  public function getPresets() {
+    return $this->presets;
   }
 
   /**
@@ -101,6 +116,51 @@ class ImgixStyles implements ImgixStylesInterface {
    */
   public function loadImage($uri) {
     $this->image = $this->imageFactory->get($uri);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildRawUrl($path, $query) {
+    $builder = new UrlBuilder(
+          $this->config->get('source_domain'),
+          $this->config->get('https'),
+          $this->config->get('secure_url_token')
+      );
+
+    $pathParsed = parse_url($path);
+
+    // Final path depends on mapping type.
+    switch ($this->config->get('mapping_type')) {
+      case 's3':
+              // Strip out the bucket. Quite wobbly, this.
+              $bucket = explode('/', ltrim($pathParsed['path'], '/'))[0];
+        $final_path = '/' . ltrim(str_replace($bucket, '', $pathParsed['path']), '/');
+        break;
+
+      case 'webproxy':
+              // Full url for webproxy. The url gets encoded later on.
+              $final_path = $path;
+        break;
+
+      case 'webfolder':
+          default:
+              // If it's a webfolder mapping,
+              // then path must be the relative path.
+              $final_path = $pathParsed['path'];
+        break;
+    }
+
+    $paramArray = [];
+    foreach (explode('&', $query) as $param) {
+      list($key, $value) = explode('=', $param);
+      $paramArray[$key] = $value;
+    }
+
+    return $builder->createURL(
+          $final_path,
+          $paramArray
+      );
   }
 
   /**

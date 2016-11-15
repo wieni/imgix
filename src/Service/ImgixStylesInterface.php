@@ -9,6 +9,14 @@ namespace Drupal\imgix\Service;
 interface ImgixStylesInterface {
 
   /**
+   * Get all imgix presets.
+   *
+   * @return array
+   *   List of all available presets.
+   */
+  public function getPresets();
+
+  /**
    * Loads an Image modules image style.
    *
    * @param string $id
@@ -34,6 +42,19 @@ interface ImgixStylesInterface {
    * @see file_url_transform_relative()
    */
   public function buildUrl();
+
+  /**
+   * Returns the URL of this image derivativr from the original path.
+   *
+   * @param string $path
+   *   The path of the image.
+   * @param string $query
+   *   The parameters to pass to imgix (w,h,fit,...).
+   *
+   * @return string
+   *   The absolute imgix url.
+   */
+  public function buildRawUrl($path, $query);
 
   /**
    * Determines the dimensions of this image style.
