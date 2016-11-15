@@ -20,6 +20,23 @@ function imgix_theme_registry_alter(&$theme_registry) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function imgix_theme() {
+  return array(
+  'imgix_formatter' => array(
+      'variables' => array(
+        'item' => NULL,
+        'item_attributes' => NULL,
+        'url' => NULL,
+        'imgix_url' => NULL,
+        'image_preset' => NULL
+      ),
+    ),
+  );
+}
+
+/**
  * Prepares variables for imgix style templates.
  *
  * Override from: image-style.html.twig.

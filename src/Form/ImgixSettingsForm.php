@@ -66,46 +66,28 @@ class ImgixSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('imgix.settings');
 
-    $form['enable'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable Imgix Integration'),
-      '#description' => $this->t('Enabling this option make it the default image processing and CDN.'),
-      '#default_value' => $config->get('enable'),
-    );
-
-    $form['settings'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Settings'),
-      '#open' => TRUE,
-      '#states' => array(
-        'visible' => array(
-          ':input[name="enable"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
-
-    $form['settings']['source'] = array(
+    $form['source'] = array(
       '#type' => 'details',
       '#title' => $this->t('Source'),
       '#collapsible' => FALSE,
       '#open' => TRUE,
     );
 
-    $form['settings']['source']['source_domain'] = array(
+    $form['source']['source_domain'] = array(
       '#type' => 'textfield',
       '#required' => TRUE,
       '#title' => $this->t('Domain'),
       '#default_value' => $config->get('source_domain'),
     );
 
-    $form['settings']['mapping'] = array(
+    $form['mapping'] = array(
       '#type' => 'details',
       '#title' => $this->t('Mapping'),
       '#collapsible' => FALSE,
       '#open' => TRUE,
     );
 
-    $form['settings']['mapping']['mapping_type'] = array(
+    $form['mapping']['mapping_type'] = array(
       '#type' => 'radios',
       '#required' => TRUE,
       '#title' => $this->t('Type'),
@@ -117,30 +99,44 @@ class ImgixSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('mapping_type'),
     );
 
-    $form['settings']['mapping']['mapping_url'] = array(
+    $form['mapping']['mapping_url'] = array(
       '#type' => 'textfield',
       '#description' => $this->t('Leave blank to get the current base URL.'),
       '#title' => $this->t('Base URL'),
       '#default_value' => $config->get('mapping_url'),
     );
 
-    $form['settings']['security'] = array(
+    $form['security'] = array(
       '#type' => 'details',
       '#title' => $this->t('Security'),
       '#collapsible' => FALSE,
       '#open' => TRUE,
     );
 
-    $form['settings']['security']['secure_url_token'] = array(
+    $form['security']['secure_url_token'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Secure URL Token'),
       '#default_value' => $config->get('secure_url_token'),
     );
 
-    $form['settings']['security']['https'] = array(
+    $form['security']['https'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('HTTPS support'),
       '#default_value' => $config->get('https'),
+    );
+
+    $form['extra'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Override'),
+      '#collapsible' => FALSE,
+      '#open' => TRUE,
+    );
+
+    $form['extra']['enable'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable global override.'),
+      '#description' => $this->t('Enabling this option make it the default image processing and CDN. This overrides all rendered images and will make educated guesses to transform core image styles to imgix styles.'),
+      '#default_value' => $config->get('enable'),
     );
 
     return parent::buildForm($form, $form_state);

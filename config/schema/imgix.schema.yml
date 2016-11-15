@@ -23,3 +23,21 @@ imgix.settings:
         https:
           label: 'HTTPS support'
           type: boolean
+
+imgix.presets:
+  type: config_object
+  label: 'Imgix presets'
+  mapping:
+    presets:
+      type: sequence
+      label: 'List of presets'
+      sequence:
+        type: mapping
+        label: 'Preset'
+        mapping:
+          key:
+            type: string
+            label: 'The actual key'
+          query:
+            type: text
+            label: 'The query string for this key'
