@@ -5,14 +5,11 @@ imgix.settings:
     settings:
       type: mapping
       mapping:
-        enable:
-          label: 'Enable Imgix Integration'
-          type: boolean
         source_domain:
           label: 'Domain'
           type: string
         mapping_type:
-          label: 'Type'
+          label: 'Source type'
           type: string
         mapping_url:
           label: 'Base URL'

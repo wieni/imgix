@@ -1,11 +1,13 @@
 services:
-  imgix.styles:
-    class: Drupal\imgix\Service\ImgixStyles
+  imgix.manager:
+    class: Drupal\imgix\ImgixManager
     arguments:
-      - @entity_type.manager
+      - @logger.factory
       - @config.factory
-      - @image.factory
-      - @logger.channel.imgix
-  logger.channel.imgix:
-    parent: logger.channel_base
-    arguments: ['imgix']
+      - @file_system
+  imgix.twig_extension:
+    class: Drupal\imgix\TwigExtension\ImgixExtension
+    arguments:
+      - @imgix.manager
+    tags:
+      - { name: twig.extension }
