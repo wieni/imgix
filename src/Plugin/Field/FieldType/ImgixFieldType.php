@@ -39,7 +39,7 @@ class ImgixFieldType extends FileItem
     /**
      * {@inheritdoc}
      */
-    public static function defaultFieldSettings() 
+    public static function defaultFieldSettings()
     {
         $settings = array(
                 'file_extensions' => 'png gif jpg jpeg',
@@ -49,6 +49,18 @@ class ImgixFieldType extends FileItem
             ) + parent::defaultFieldSettings();
         
         return $settings;
+    }
+    
+    public function getFile() {
+        return $this->entity;
+    }
+    
+    public function getCaption() {
+        return $this->get('description')->getValue();
+    }
+    
+    public function getTitle() {
+        return $this->get('title')->getValue();
     }
     
     /**
@@ -115,7 +127,7 @@ class ImgixFieldType extends FileItem
     /**
      * {@inheritdoc}
      */
-    public function fieldSettingsForm(array $form, FormStateInterface $form_state) 
+    public function fieldSettingsForm(array $form, FormStateInterface $form_state)
     {
         // Get base form from FileItem.
         $element = parent::fieldSettingsForm($form, $form_state);
