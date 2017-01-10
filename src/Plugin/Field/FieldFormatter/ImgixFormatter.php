@@ -196,9 +196,10 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         $base_cache_tags = [];
         
         $meta = [];
+        
         /**
- * @var ImgixFieldType $item 
-*/
+         * @var ImgixFieldType $item
+         */
         foreach ($items as $item) {
             $meta[$item->target_id] = [
                 'title' => $item->title,
@@ -245,13 +246,14 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
     /**
      * {@inheritdoc}
      */
-    public function calculateDependencies() 
+    public function calculateDependencies()
     {
         $dependencies = parent::calculateDependencies();
         $style_id = $this->getSetting('image_style');
+        
         /**
- * @var \Drupal\image\ImageStyleInterface $style 
-*/
+         * @var \Drupal\image\ImageStyleInterface $style
+         */
         if ($style_id && $style = ImageStyle::load($style_id)) {
             // If this formatter uses a valid image style to display the image, add
             // the image style configuration entity as dependency of this formatter.
@@ -263,13 +265,14 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
     /**
      * {@inheritdoc}
      */
-    public function onDependencyRemoval(array $dependencies) 
+    public function onDependencyRemoval(array $dependencies)
     {
         $changed = parent::onDependencyRemoval($dependencies);
         $style_id = $this->getSetting('image_style');
+        
         /**
- * @var \Drupal\image\ImageStyleInterface $style 
-*/
+         * @var \Drupal\image\ImageStyleInterface $style
+         */
         if ($style_id && $style = ImageStyle::load($style_id)) {
             if (!empty($dependencies[$style->getConfigDependencyKey()][$style->getConfigDependencyName()])) {
                 $replacement_id = $this->imageStyleStorage->getReplacementId($style_id);
