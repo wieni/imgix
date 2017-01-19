@@ -46,6 +46,10 @@ class ImgixExtension extends \Twig_Extension
     
     public function imgix($file, $presetSetting)
     {
+        if (!$file) {
+            return "https://placeholdit.imgix.net/~text?txtsize=33&txt=no_image&w=200&h=200";
+        }
+
         if ($file instanceof ImgixFieldType) {
             $file = $file->getFile();
         }
