@@ -5,6 +5,7 @@ services:
       - @logger.factory
       - @config.factory
       - @file_system
+      - @http_client
   imgix.twig_extension:
     class: Drupal\imgix\TwigExtension\ImgixExtension
     arguments:
