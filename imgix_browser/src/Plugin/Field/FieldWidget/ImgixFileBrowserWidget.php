@@ -264,7 +264,7 @@ class ImgixFileBrowserWidget extends EntityReferenceBrowserWidget
 
         // Only do validation if the function is triggered from other places than
         // the image process form.
-        if (isset($trigger["#submit"]) && !in_array('file_managed_file_submit', $trigger['#submit'])) {
+        if (isset($trigger['#submit']) && !in_array('file_managed_file_submit', $trigger['#submit'])) {
             // If the image is not there, we do not check for empty values.
             $parents = $element['#parents'];
             $field = array_pop($parents);
@@ -398,7 +398,7 @@ class ImgixFileBrowserWidget extends EntityReferenceBrowserWidget
                         '#size' => 45,
                         '#maxlength' => $file_settings->get('description.length'),
                         '#access' => (bool) $field_settings['description_field'],
-                        '#required' =>  (bool) $field_settings['description_field_required'],
+                        '#required' => (bool) $field_settings['description_field_required'],
                         '#element_validate' => $field_settings['description_field_required'] == 1 ? array(
                             array(
                                 get_called_class(),
