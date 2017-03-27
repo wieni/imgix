@@ -1,0 +1,7 @@
+name: 'Imgix Browser'
+description: 'Provides a form and entity browser widget'
+type: module
+core: 8.x
+package: Media
+dependencies:
+  - entity_browser

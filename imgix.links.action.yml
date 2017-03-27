@@ -5,4 +5,4 @@ imgix.presets.add:
     - imgix.presets
   options:
       query:
-        destination: '/admin/config/services/imgix/presets'
+        destination: '/admin/config/media/imgix/presets'
