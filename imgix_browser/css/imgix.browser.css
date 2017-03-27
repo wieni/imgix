@@ -1,0 +1,19 @@
+.imgix-browser-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.imgix-browser-container .imgix-browser-item {
+    flex-grow: 0;
+    flex-shrink: 1;
+    width:200px;
+    text-align: center;
+    padding: 10px;
+}
+.imgix-browser-container .imgix-browser-item:hover {
+    background-color: #ffffff;
+}
+.imgix-browser-container .imgix-browser-item.active {
+    border: 2px solid #cecece;
+}

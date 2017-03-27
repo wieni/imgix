@@ -90,6 +90,8 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
     {
         $form = parent::getForm($original_form, $form_state, $additional_widget_parameters);
 
+        $form['#attached']['library'][] = 'imgix_browser/imgix.browser';
+
         $pagerKey = 666;
 
         $query = $this->entityTypeManager->getStorage('file')->getQuery('AND');
@@ -138,7 +140,7 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
                 '#default_value' => NULL,
             ];
             $form['view']['view'][$entityBrowserKey]['file'] = [
-                '#markup' => $file->id(),
+                '#markup' => $file->getFilename(),
             ];
             $form['view']['view'][$entityBrowserKey]['preview'] = [
                 '#weight' => -10,

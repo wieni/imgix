@@ -1,0 +1,12 @@
+imgix.browser:
+  css:
+    theme:
+      css/imgix.browser.css: {}
+  js:
+    js/imgix_browser.js: {}
+  dependencies:
+    - core/jquery
+imgix.widget:
+  css:
+    theme:
+      css/imgix.widget.css: {}

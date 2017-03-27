@@ -160,6 +160,10 @@ class ImgixFileBrowserWidget extends EntityReferenceBrowserWidget
       $this->items = $items;
       $return = parent::formElement($items, $delta, $element, $form, $form_state);
 
+      if (!empty($return['current'])) {
+          $return['current']['#attached']['library'][] = 'imgix_browser/imgix.widget';
+      }
+
       // This is so good but breaks entity_browser :(
       // if (!empty($return['entity_browser'])) {
       //    // Put the button to add more on the footer.
