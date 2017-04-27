@@ -178,7 +178,7 @@ class ImgixWidget extends FileWidget
         $element['#description_display'] = 'before';
         if (isset($element['description'])) {
             $element['description']['#title'] = t('Caption');
-            $element['description']['#description'] = t('The caption will be shown underneath the image.');
+            $element['description']['#description'] = t('The caption will be shown under the image.');
         }
 
         return $element;
