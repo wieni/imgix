@@ -152,7 +152,8 @@ class ImgixWidget extends FileWidget
                 );
             }
         }
-        
+
+        // Add the image title
         $element['title'] = array(
             '#type' => 'textfield',
             '#title' => t('Title'),
@@ -169,10 +170,18 @@ class ImgixWidget extends FileWidget
                 ),
             ) : array(),
         );
-        
+
+        // Default FileWidget stuff
+        $element = parent::process($element, $form_state, $form);
+
+        // Change the image description / caption
         $element['#description_display'] = 'before';
-        
-        return parent::process($element, $form_state, $form);
+        if (isset($element['description'])) {
+            $element['description']['#title'] = t('Caption');
+            $element['description']['#description'] = t('The caption will be shown underneath the image.');
+        }
+
+        return $element;
     }
     
     /**
