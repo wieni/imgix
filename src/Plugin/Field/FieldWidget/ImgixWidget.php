@@ -169,6 +169,9 @@ class ImgixWidget extends FileWidget
                 ),
             ) : array(),
         );
+
+        // Attach image preview library
+        $element['#attached']['library'][] = 'imgix/image-preview';
         
         $element['#description_display'] = 'before';
         
