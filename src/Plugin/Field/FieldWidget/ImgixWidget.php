@@ -152,7 +152,8 @@ class ImgixWidget extends FileWidget
                 );
             }
         }
-        
+
+        // Add the image title
         $element['title'] = array(
             '#type' => 'textfield',
             '#title' => t('Title'),
@@ -170,12 +171,20 @@ class ImgixWidget extends FileWidget
             ) : array(),
         );
 
+
+        $element = parent::process($element, $form_state, $form);
+
         // Attach image preview library
         $element['#attached']['library'][] = 'imgix/image-preview';
-        
+
+        // Change the image description / caption
         $element['#description_display'] = 'before';
-        
-        return parent::process($element, $form_state, $form);
+        if (isset($element['description'])) {
+            $element['description']['#title'] = t('Caption');
+            $element['description']['#description'] = t('The caption will be shown under the image.');
+        }
+
+        return $element;
     }
     
     /**
