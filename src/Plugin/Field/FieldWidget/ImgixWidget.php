@@ -171,8 +171,11 @@ class ImgixWidget extends FileWidget
             ) : array(),
         );
 
-        // Default FileWidget stuff
+
         $element = parent::process($element, $form_state, $form);
+
+        // Attach image preview library
+        $element['#attached']['library'][] = 'imgix/image-preview';
 
         // Change the image description / caption
         $element['#description_display'] = 'before';
