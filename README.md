@@ -14,10 +14,20 @@ Upload files and render them through imgix
 
 ### Twig function
 
-TODO
+There are three twig functions you can call:
 
+```imgix(image, preset)```
+
+Renders the image (imgx field type) in the given preset.
+
+```imgix_width(image, preset)```
+
+Returns the rendered width of the give image (field type) in the given preset.
+
+```imgix_height(image, preset)```
+
+Returns the rendered height of the give image (field type) in the given preset.
 
 ### TODO
 
-* Twig function
 * Provide a formatter

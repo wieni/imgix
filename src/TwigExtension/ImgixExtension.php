@@ -20,7 +20,7 @@ class ImgixExtension extends \Twig_Extension
             'imgix' => new \Twig_SimpleFilter(
                 'imgix',
                 [$this, 'imgix']
-            )
+            ),
         ];
     }
     
@@ -30,7 +30,15 @@ class ImgixExtension extends \Twig_Extension
             'imgix' => new \Twig_SimpleFunction(
                 'imgix',
                 [$this, 'imgix']
-            )
+            ),
+            'imgix_width' => new \Twig_SimpleFunction(
+                'imgix_width',
+                [$this, 'imgixWidth']
+            ),
+            'imgix_height' => new \Twig_SimpleFunction(
+                'imgix_height',
+                [$this, 'imgixHeight']
+            ),
         ];
     }
     
@@ -49,25 +57,32 @@ class ImgixExtension extends \Twig_Extension
         if (!$file) {
             return "https://placeholdit.imgix.net/~text?txtsize=33&txt=no_image&w=200&h=200";
         }
-
+        
         if ($file instanceof ImgixFieldType) {
             $file = $file->getFile();
         }
         
-        $presets = $this->imgixManager->getPresets();
-    
-        $params = [];
-        if (isset($presets[$presetSetting])) {
-            $tmp = explode('&', $presets[$presetSetting]['query']);
-            foreach ($tmp as $value) {
-                $tmp2 = explode('=', $value);
-                $params[$tmp2[0]] = $tmp2[1];
-            }
-    
-            return $this->imgixManager->getImgixUrl($file, $params);
+        if ($url = $this->imgixManager->getImgixUrl($file, $this->imgixManager->getParamsFromPreset($presetSetting))) {
+            return $url;
         }
         
         return 'No valid preset found';
+    }
+    
+    public function imgixWidth(ImgixFieldType $file, $preset)
+    {
+        $json = $this->imgixManager->getJson($file->getFile(), $this->imgixManager->getParamsFromPreset($preset));
+        if ($json && $json->PixelWidth) {
+            return $json->PixelWidth;
+        }
+    }
+    
+    public function imgixHeight(ImgixFieldType $file, $preset)
+    {
+        $json = $this->imgixManager->getJson($file->getFile(), $this->imgixManager->getParamsFromPreset($preset));
+        if ($json && $json->PixelHeight) {
+            return $json->PixelHeight;
+        }
     }
     
 }
