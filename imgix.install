@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Add 'external_cdn' config option
+ */
+function imgix_update_8001()
+{
+    $config_factory = \Drupal::configFactory();
+    $config = $config_factory->getEditable('imgix.settings');
+    $config->set('external_cdn', '');
+    $config->save(true);
+}

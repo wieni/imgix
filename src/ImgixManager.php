@@ -42,7 +42,7 @@ class ImgixManager implements ImgixManagerInterface
         ConfigFactoryInterface $config,
         FileSystemInterface $fileSystem
     ) {
-        $this->logger = $channelFactory->get('vrt_imagestore');
+        $this->logger = $channelFactory->get('imgix');
         $this->config = $config;
         $this->fileSystem = $fileSystem;
         
