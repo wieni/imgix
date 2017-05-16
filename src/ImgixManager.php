@@ -115,10 +115,16 @@ class ImgixManager implements ImgixManagerInterface
             $builder->setSignKey($settings['secure_url_token']);
         }
     
-        return $builder->createURL(
+        $url = $builder->createURL(
             $buildUrl,
             $parameters
         );
+
+        if ($settings['external_cdn'] !== '') {
+            $url = str_replace($settings['source_domain'], $settings['external_cdn'], $url);
+        }
+
+        return $url;
     }
     
     /**

@@ -134,6 +134,19 @@ class ImgixSettings extends ConfigFormBase
             '#title' => $this->t('HTTPS support'),
             '#default_value' => $config->get('https'),
         );
+
+        $form['options'] = array(
+            '#type' => 'details',
+            '#title' => $this->t('Extra options'),
+            '#collapsible' => false,
+            '#open' => true,
+        );
+        $form['options']['external_cdn'] = array(
+            '#type' => 'textfield',
+            '#title' => $this->t('External CDN'),
+            '#description' => $this->t('Enter the base url of your external cdn to use instead of Imgix own cdn. Do not add a protocol (http/https) nor leading/trailing slashes'),
+            '#default_value' => $config->get('external_cdn'),
+        );
         
         return parent::buildForm($form, $form_state);
     }

@@ -20,6 +20,9 @@ imgix.settings:
         https:
           label: 'HTTPS support'
           type: boolean
+        external_cdn:
+          label: 'External CDN'
+          type: string
 
 imgix.presets:
   type: config_object
