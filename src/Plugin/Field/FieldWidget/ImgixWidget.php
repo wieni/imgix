@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
+use Drupal\Core\Render\Element;
 
 /**
  * Plugin implementation of the 'imgix' widget.
@@ -50,12 +51,12 @@ class ImgixWidget extends FileWidget
         
         $cardinality = $this->fieldDefinition->getFieldStorageDefinition()
             ->getCardinality();
-        $file_upload_help = array(
+        $file_upload_help = [
             '#theme' => 'file_upload_help',
             '#description' => '',
             '#upload_validators' => $elements[0]['#upload_validators'],
             '#cardinality' => $cardinality,
-        );
+        ];
         if ($cardinality == 1) {
             // If there's only one field, return it as delta 0.
             if (empty($elements[0]['#default_value']['fids'])) {
@@ -63,8 +64,7 @@ class ImgixWidget extends FileWidget
                 $elements[0]['#description'] = \Drupal::service('renderer')
                     ->renderPlain($file_upload_help);
             }
-        }
-        else {
+        } else {
             $elements['#file_upload_description'] = $file_upload_help;
         }
         
@@ -81,19 +81,17 @@ class ImgixWidget extends FileWidget
         array &$form,
         FormStateInterface $form_state
     ) {
-        $element = parent::formElement(
-            $items, $delta, $element, $form,
-            $form_state
-        );
+        $element = parent::formElement($items, $delta, $element, $form, $form_state);
         
         $field_settings = $this->getFieldSettings();
         
         // If not using custom extension validation, ensure this is an image.
-        $supported_extensions = array('png', 'gif', 'jpg', 'jpeg');
-        $extensions = isset($element['#upload_validators']['file_validate_extensions'][0]) ? $element['#upload_validators']['file_validate_extensions'][0] : implode(
-            ' ',
-            $supported_extensions
-        );
+        $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
+        if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
+            $extensions = $element['#upload_validators']['file_validate_extensions'][0];
+        } else {
+            $extensions = implode(' ', $supported_extensions);
+        }
         $extensions = array_intersect(
             explode(' ', $extensions),
             $supported_extensions
@@ -124,37 +122,35 @@ class ImgixWidget extends FileWidget
     ) {
         $item = $element['#value'];
         $item['fids'] = $element['fids']['#value'];
-        
-        $element['#theme'] = 'imgix_widget';
-        
-        // Add the image preview.
-        if (!empty($element['#files'])) {
-            $file = reset($element['#files']);
 
-            if (!empty($element['#value']['target_id'])) {
+        foreach (Element::children($element) as $child) {
+            if (isset($element[$child]['filename']['#file']) && $element[$child]['filename']['#theme'] == 'file_link') {
+                unset($element[$child]['filename']['#theme']);
+
                 $url = \Drupal::service('imgix.manager')
                     ->getImgixUrl(
-                        $file, [
-                        'auto' => 'format',
-                        'fit' => 'max',
-                        'h' => 150,
-                        'q' => 75,
-                        'w' => 150,
+                        $element[$child]['filename']['#file'],
+                        [
+                            'auto' => 'format',
+                            'fit' => 'max',
+                            'h' => 150,
+                            'q' => 75,
+                            'w' => 150,
                         ]
                     );
-                
-                $element['preview'] = array(
+
+                $element[$child]['preview'] = [
                     '#weight' => -10,
                     '#theme' => 'imgix_image',
                     '#url' => $url,
                     '#title' => isset($item['title']) ? $item['title'] : '',
                     '#caption' => '',
-                );
+                ];
             }
         }
 
-        // Add the image title
-        $element['title'] = array(
+        // Add the image title.
+        $element['title'] = [
             '#type' => 'textfield',
             '#title' => t('Title'),
             '#default_value' => isset($item['title']) ? $item['title'] : '',
@@ -163,13 +159,15 @@ class ImgixWidget extends FileWidget
             '#weight' => -10,
             '#access' => (bool) $item['fids'] && $element['#title_field'],
             '#required' => $element['#title_field_required'],
-            '#element_validate' => $element['#title_field_required'] == 1 ? array(
-                array(
-                    get_called_class(),
-                    'validateRequiredFields',
-                ),
-            ) : array(),
-        );
+            '#element_validate' => $element['#title_field_required'] == 1 ?
+                [
+                    [
+                        get_called_class(),
+                        'validateRequiredFields',
+                    ],
+                ] :
+                [],
+        ];
 
 
         $element = parent::process($element, $form_state, $form);
@@ -216,10 +214,8 @@ class ImgixWidget extends FileWidget
             if (!array_key_exists($field, $image_field)) {
                 return;
             }
-        }
-        else {
+        } else {
             $form_state->setLimitValidationErrors([]);
         }
     }
-    
 }
