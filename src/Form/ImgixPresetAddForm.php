@@ -10,37 +10,36 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class ImgixPresetAddForm extends ConfigFormBase
 {
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getFormId() 
+    public function getFormId()
     {
         return 'imgix_presets_add';
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    protected function getEditableConfigNames() 
+    protected function getEditableConfigNames()
     {
         return [
             'imgix.presets.add',
         ];
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function buildForm(array $form, FormStateInterface $form_state, $key = null) 
+    public function buildForm(array $form, FormStateInterface $form_state, $key = null)
     {
-        
         $presets = \Drupal::config('imgix.presets')->get('presets');
         $preset = false;
         if (!empty($presets[$key])) {
             $preset = $presets[$key];
         }
-        
+
         $form['key'] = array(
             '#title' => $this->t('Key'),
             '#type' => 'machine_name',
@@ -52,7 +51,7 @@ class ImgixPresetAddForm extends ConfigFormBase
             ],
             '#disabled' => isset($preset['key']),
         );
-        
+
         $form['query'] = array(
             '#type' => 'textarea',
             '#title' => $this->t('Parameter string'),
@@ -62,10 +61,10 @@ class ImgixPresetAddForm extends ConfigFormBase
             '#maxlength' => 255,
             '#description' => $this->t('The parameter string to pass to imgix eg "w=900&h=300&fit=crop&crop=entropy"'),
         );
-        
+
         return parent::buildForm($form, $form_state);
     }
-    
+
     /**
      * Checks for an existing ECK entity type.
      *
@@ -79,34 +78,33 @@ class ImgixPresetAddForm extends ConfigFormBase
      * @return bool
      *   TRUE if this format already exists, FALSE otherwise.
      */
-    public function exists($key, array $element, FormStateInterface $form_state) 
+    public function exists($key, array $element, FormStateInterface $form_state)
     {
         // $setting = $this->wmSettings->readKey($key);
         $setting = [];
-        
+
         if (!empty($setting['key'])) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function submitForm(array &$form, FormStateInterface $form_state) 
+    public function submitForm(array &$form, FormStateInterface $form_state)
     {
         $presets = \Drupal::config('imgix.presets')->get('presets');
-        
+
         $presets[$form_state->getValue('key')] = [
             'key' => $form_state->getValue('key'),
             'query' => $form_state->getValue('query'),
         ];
-        
+
         $config = \Drupal::service('config.factory')->getEditable('imgix.presets');
         $config->set('presets', $presets)->save();
-        
+
         parent::submitForm($form, $form_state);
     }
-    
 }

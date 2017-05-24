@@ -17,7 +17,7 @@ interface ImgixManagerInterface
      * @return array
      */
     public function getPresets();
-    
+
     /**
      * @param \Drupal\file\FileInterface $file
      *   File.
@@ -27,7 +27,7 @@ interface ImgixManagerInterface
      * @return string
      */
     public function getImgixUrl(FileInterface $file, $parameters);
-    
+
     /**
      * Default mapping types in Imgix.
      *

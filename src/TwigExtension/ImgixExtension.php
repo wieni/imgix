@@ -8,12 +8,12 @@ use Drupal\imgix\Plugin\Field\FieldType\ImgixFieldType;
 class ImgixExtension extends \Twig_Extension
 {
     protected $imgixManager;
-    
+
     public function __construct(ImgixManagerInterface $imgixManager)
     {
         $this->imgixManager = $imgixManager;
     }
-    
+
     public function getFilters()
     {
         return [
@@ -23,7 +23,7 @@ class ImgixExtension extends \Twig_Extension
             )
         ];
     }
-    
+
     public function getFunctions()
     {
         return [
@@ -33,7 +33,7 @@ class ImgixExtension extends \Twig_Extension
             )
         ];
     }
-    
+
     /**
      * This is the same name we used on the services.yml file
      *
@@ -43,8 +43,8 @@ class ImgixExtension extends \Twig_Extension
     {
         return "imgix.twig_extension";
     }
-    
-    public function imgix($file, $presetSetting)
+
+    public function imgix($file, $preset)
     {
         if (!$file) {
             return "https://placeholdit.imgix.net/~text?txtsize=33&txt=no_image&w=200&h=200";
@@ -53,21 +53,7 @@ class ImgixExtension extends \Twig_Extension
         if ($file instanceof ImgixFieldType) {
             $file = $file->getFile();
         }
-        
-        $presets = $this->imgixManager->getPresets();
-    
-        $params = [];
-        if (isset($presets[$presetSetting])) {
-            $tmp = explode('&', $presets[$presetSetting]['query']);
-            foreach ($tmp as $value) {
-                $tmp2 = explode('=', $value);
-                $params[$tmp2[0]] = $tmp2[1];
-            }
-    
-            return $this->imgixManager->getImgixUrl($file, $params);
-        }
-        
-        return 'No valid preset found';
+
+        return $this->imgixManager->getImgixUrlByPreset($file, $preset);
     }
-    
 }

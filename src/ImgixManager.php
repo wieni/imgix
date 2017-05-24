@@ -22,14 +22,14 @@ class ImgixManager implements ImgixManagerInterface
     const SOURCE_S3 = 's3';
     const SOURCE_FOLDER = 'webfolder';
     const SOURCE_PROXY = 'webproxy';
-    
+
     protected $logger;
     protected $config;
     protected $fileSystem;
-    
+
     protected $auth;
     protected $baseUri;
-    
+
     /**
      * Constructor for ImgixManager.
      *
@@ -45,13 +45,13 @@ class ImgixManager implements ImgixManagerInterface
         $this->logger = $channelFactory->get('imgix');
         $this->config = $config;
         $this->fileSystem = $fileSystem;
-        
+
         //$this->auth =  base64_encode($this->config->get('key') . ':' . $this->config->get('secret'));
         //
         //$protocol = ($this->config->get('https') ? 'https://': 'http://');
         //$this->baseUri = new Uri($protocol . $this->config->get('host_admin'));
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -62,59 +62,79 @@ class ImgixManager implements ImgixManagerInterface
             ->get('imgix.presets')
             ->get('presets');
     }
-    
+
+    public function getImgixUrlByPreset(FileInterface $file, $preset)
+    {
+        $presets = $this->getPresets();
+
+        $params = [];
+        if (!isset($presets[$preset])) {
+            throw new \InvalidArgumentException(
+                sprintf('No such preset: \'%s\'.', $preset)
+            );
+        }
+
+        $queryParams = explode('&', $presets[$preset]['query']);
+        foreach ($queryParams as $value) {
+            $keyValue = explode('=', $value);
+            $params[$keyValue[0]] = $keyValue[1];
+        }
+
+        return $this->getImgixUrl($file, $params);
+    }
+
     /**
      * @inheritdoc
      *
      * TODO: Do some logging.
      */
-    public function getImgixUrl(FileInterface $file, $parameters) 
+    public function getImgixUrl(FileInterface $file, $parameters)
     {
         $settings = $this->getSettings();
-        
+
         if (empty($settings['source_domain'])) {
             return '';
         }
-        
+
         // Get the public path of the file.
         $path = $file->url();
         $pathInfo = parse_url($path);
-        
+
         $buildUrl = false;
-        
+
         switch ($settings['mapping_type']) {
-        case self::SOURCE_FOLDER:
-            // We need the full path after the domain.
-            $buildUrl = $pathInfo['path'];
-            break;
-        case self::SOURCE_PROXY:
-            // We just need the full path.
-            $buildUrl = $path;
-            break;
-        case self::SOURCE_S3:
-            // We liberally decide that you did NOT enter a S3 Bucket Prefix.
-            // Now it's basically also the path.
-            $buildUrl = explode("/", $pathInfo['path']);
-            array_shift($buildUrl); // The "/".
-            array_shift($buildUrl); // The bucket.
-                
-            $buildUrl = implode("/", $buildUrl);
-            break;
+            case self::SOURCE_FOLDER:
+                // We need the full path after the domain.
+                $buildUrl = $pathInfo['path'];
+                break;
+            case self::SOURCE_PROXY:
+                // We just need the full path.
+                $buildUrl = $path;
+                break;
+            case self::SOURCE_S3:
+                // We liberally decide that you did NOT enter a S3 Bucket Prefix.
+                // Now it's basically also the path.
+                $buildUrl = explode("/", $pathInfo['path']);
+                array_shift($buildUrl); // The "/".
+                array_shift($buildUrl); // The bucket.
+
+                $buildUrl = implode("/", $buildUrl);
+                break;
         }
-    
+
         if (!$buildUrl) {
             return '';
         }
 
         $builder = new UrlBuilder($settings['source_domain']);
-        
+
         if ($settings['https']) {
             $builder->setUseHttps(true);
         }
         if ($settings['secure_url_token']) {
             $builder->setSignKey($settings['secure_url_token']);
         }
-    
+
         $url = $builder->createURL(
             $buildUrl,
             $parameters
@@ -126,7 +146,7 @@ class ImgixManager implements ImgixManagerInterface
 
         return $url;
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -138,7 +158,7 @@ class ImgixManager implements ImgixManagerInterface
             self::SOURCE_S3 => 'Amazon S3',
         ];
     }
-    
+
     private function getSettings()
     {
         return $this

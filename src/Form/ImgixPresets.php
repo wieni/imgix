@@ -14,13 +14,12 @@ use Drupal\Core\Url;
 
 use Drupal\imgix\ImgixManagerInterface;
 
-
 class ImgixPresets extends FormBase
 {
-    
+
     protected $entityTypeManager;
     protected $imgixManager;
-    
+
     /**
      * Constructs a \Drupal\system\ConfigFormBase object.
      *
@@ -34,7 +33,7 @@ class ImgixPresets extends FormBase
         $this->entityTypeManager = $entityTypeManager;
         $this->imgixManager = $imgixManager;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +44,7 @@ class ImgixPresets extends FormBase
             $container->get('imgix.manager')
         );
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -53,7 +52,7 @@ class ImgixPresets extends FormBase
     {
         return 'imgix_profiles';
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -117,10 +116,10 @@ class ImgixPresets extends FormBase
                 ],
             ];
         }
-        
+
         return $form;
     }
-    
+
     /**
      * {@inheritdoc}
      */

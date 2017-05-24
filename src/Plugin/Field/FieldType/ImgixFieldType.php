@@ -42,36 +42,39 @@ class ImgixFieldType extends FileItem
     public static function defaultFieldSettings()
     {
         $settings = array(
-                'file_extensions' => 'png gif jpg jpeg',
-                'description_field_required' => 0,
-                'title_field' => 0,
-                'title_field_required' => 0,
-            ) + parent::defaultFieldSettings();
-        
+            'file_extensions' => 'png gif jpg jpeg',
+            'description_field_required' => 0,
+            'title_field' => 0,
+            'title_field_required' => 0,
+        ) + parent::defaultFieldSettings();
+
         return $settings;
     }
-    
-    public function getFile() {
+
+    public function getFile()
+    {
         return $this->entity;
     }
-    
-    public function getCaption() {
+
+    public function getCaption()
+    {
         return $this->get('description')->getValue();
     }
-    
-    public function getTitle() {
+
+    public function getTitle()
+    {
         return $this->get('title')->getValue();
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public static function schema(FieldStorageDefinitionInterface $field_definition)
     {
         $schema = parent::schema($field_definition);
-        
+
         unset($schema['columns']['display']);
-        
+
         $schema['columns']['title'] = [
             'description' => "Image title text, for the image's 'title' attribute.",
             'type' => 'varchar',
@@ -87,43 +90,42 @@ class ImgixFieldType extends FileItem
             'type' => 'int',
             'unsigned' => true,
         ];
-        
+
         return $schema;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition)
     {
         $properties = parent::propertyDefinitions($field_definition);
-    
+
         unset($properties['display']);
-        
+
         $properties['title'] = DataDefinition::create('string')
             ->setLabel(t('Title'));
         $properties['width'] = DataDefinition::create('integer')
             ->setLabel(t('Width'));
         $properties['height'] = DataDefinition::create('integer')
             ->setLabel(t('Height'));
-        
+
         return $properties;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data)
     {
         $element = parent::storageSettingsForm($form, $form_state, $has_data);
-        
+
         unset($element['display_field']);
         unset($element['display_default']);
-        
+
         return $element;
     }
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -131,14 +133,14 @@ class ImgixFieldType extends FileItem
     {
         // Get base form from FileItem.
         $element = parent::fieldSettingsForm($form, $form_state);
-    
+
         $settings = $this->getSettings();
 
         // That's right no shame.
         if (isset($element['description_field'])) {
             $element['description_field']['#title'] = new TranslatableMarkup('Enable <em>Caption</em> field');
             $element['description_field']['#description'] = new TranslatableMarkup('The caption field allows users to enter a caption for the image.');
-            
+
             $element['description_field_required'] = array(
                 '#type' => 'checkbox',
                 '#title' => t('<em>Caption</em> field required'),
@@ -151,7 +153,7 @@ class ImgixFieldType extends FileItem
                 ),
             );
         }
-        
+
         // Add title configuration options.
         $element['title_field'] = array(
             '#type' => 'checkbox',
@@ -174,7 +176,7 @@ class ImgixFieldType extends FileItem
 
         return $element;
     }
-    
+
     /**
      * This is separate because it should be dep injection but fieldType cannot
      * cope with with that yet

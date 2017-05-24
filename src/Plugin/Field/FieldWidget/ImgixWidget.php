@@ -28,7 +28,7 @@ class ImgixWidget extends FileWidget
     {
         return [];
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +36,7 @@ class ImgixWidget extends FileWidget
     {
         return [];
     }
-    
+
     /**
      * Overrides \Drupal\file\Plugin\Field\FieldWidget\FileWidget::formMultipleElements().
      *
@@ -48,7 +48,7 @@ class ImgixWidget extends FileWidget
         FormStateInterface $form_state
     ) {
         $elements = parent::formMultipleElements($items, $form, $form_state);
-        
+
         $cardinality = $this->fieldDefinition->getFieldStorageDefinition()
             ->getCardinality();
         $file_upload_help = [
@@ -64,13 +64,15 @@ class ImgixWidget extends FileWidget
                 $elements[0]['#description'] = \Drupal::service('renderer')
                     ->renderPlain($file_upload_help);
             }
-        } else {
-            $elements['#file_upload_description'] = $file_upload_help;
+
+            return $elements;
         }
-        
+
+        $elements['#file_upload_description'] = $file_upload_help;
+
         return $elements;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -82,9 +84,9 @@ class ImgixWidget extends FileWidget
         FormStateInterface $form_state
     ) {
         $element = parent::formElement($items, $delta, $element, $form, $form_state);
-        
+
         $field_settings = $this->getFieldSettings();
-        
+
         // If not using custom extension validation, ensure this is an image.
         $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
         if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
@@ -100,14 +102,14 @@ class ImgixWidget extends FileWidget
             ' ',
             $extensions
         );
-        
+
         // Add properties needed by process() method.
         $element['#title_field'] = $field_settings['title_field'];
         $element['#title_field_required'] = $field_settings['title_field_required'];
-        
+
         return $element;
     }
-    
+
     /**
      * Form API callback: Processes a image_image field element.
      *
@@ -160,15 +162,14 @@ class ImgixWidget extends FileWidget
             '#access' => (bool) $item['fids'] && $element['#title_field'],
             '#required' => $element['#title_field_required'],
             '#element_validate' => $element['#title_field_required'] == 1 ?
+            [
                 [
-                    [
-                        get_called_class(),
-                        'validateRequiredFields',
-                    ],
-                ] :
-                [],
+                    get_called_class(),
+                    'validateRequiredFields',
+                ],
+            ] :
+            [],
         ];
-
 
         $element = parent::process($element, $form_state, $form);
 
@@ -184,7 +185,7 @@ class ImgixWidget extends FileWidget
 
         return $element;
     }
-    
+
     /**
      * Validate callback for alt and title field, if the user wants them required.
      *

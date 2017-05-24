@@ -28,9 +28,9 @@ use Drupal\imgix\Plugin\Field\FieldType\ImgixFieldType;
  */
 class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPluginInterface
 {
-    
+
     protected $imgixManager;
-    
+
     /**
      * Constructs an Imgix object.
      */
@@ -45,13 +45,18 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         ImgixManagerInterface $imgixManager
     ) {
         parent::__construct(
-            $plugin_id, $plugin_definition, $field_definition,
-            $settings, $label, $view_mode, $third_party_settings
+            $plugin_id,
+            $plugin_definition,
+            $field_definition,
+            $settings,
+            $label,
+            $view_mode,
+            $third_party_settings
         );
-        
+
         $this->imgixManager = $imgixManager;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -72,7 +77,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
             $container->get('imgix.manager')
         );
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -83,7 +88,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                 'image_link' => '',
             ) + parent::defaultSettings();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -94,7 +99,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         foreach ($presets as $key => $preset) {
             $options[$key] = ucfirst($preset['key']) . ' (' . $preset['query'] . ')';
         }
-        
+
         $element['image_preset'] = [
             '#title' => t('Imgix preset'),
             '#type' => 'select',
@@ -102,7 +107,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
             '#empty_option' => t('None (original image)'),
             '#options' => $options,
         ];
-        
+
         $link_types = array(
             'content' => t('Content'),
             'file' => t('File'),
@@ -114,20 +119,19 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
             '#empty_option' => t('Nothing'),
             '#options' => $link_types,
         );
-        
+
         return $element;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function settingsSummary()
     {
         $summary = array();
-        
+
         $presets = $this->imgixManager->getPresets();
-        
-     
+
         // Styles could be lost because of enabled/disabled modules that defines
         // their styles in code.
         $presetSetting = $this->getSetting('image_preset');
@@ -140,7 +144,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         else {
             $summary[] = t('Original image');
         }
-        
+
         $link_types = array(
             'content' => t('Linked to content'),
             'file' => t('Linked to file'),
@@ -150,10 +154,10 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         if (isset($link_types[$imageLinkSetting])) {
             $summary[] = $link_types[$imageLinkSetting];
         }
-        
+
         return $summary;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -161,12 +165,12 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
     {
         $elements = array();
         $files = $this->getEntitiesToView($items, $langcode);
-        
+
         // Early opt-out if the field is empty.
         if (empty($files)) {
             return $elements;
         }
-    
+
         // Check if the formatter involves a link.
         $linkUrl = null;
         $imageLinkSetting = $this->getSetting('image_link');
@@ -179,7 +183,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         elseif ($imageLinkSetting == 'file') {
             $linkFile = true;
         }
-        
+
         // Get the params for the given preset.
         $presetSetting = $this->getSetting('image_preset');
         $presets = $this->imgixManager->getPresets();
@@ -191,12 +195,12 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                 $params[$tmp2[0]] = $tmp2[1];
             }
         }
-        
+
         // Collect cache tags to be added for each item in the field.
         $base_cache_tags = [];
-        
+
         $meta = [];
-        
+
         /**
          * @var ImgixFieldType $item
          */
@@ -206,7 +210,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                 'caption' => $item->description
             ];
         }
-        
+
         foreach ($files as $delta => $file) {
             $cache_contexts = [];
             if (isset($linkFile)) {
@@ -223,7 +227,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                 $base_cache_tags,
                 $file->getCacheTags()
             );
-            
+
             $url = $this->imgixManager->getImgixUrl($file, $params);
 
             $elements[$delta] = array(
@@ -239,10 +243,10 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                 ),
             );
         }
-        
+
         return $elements;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -250,7 +254,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
     {
         $dependencies = parent::calculateDependencies();
         $style_id = $this->getSetting('image_style');
-        
+
         /**
          * @var \Drupal\image\ImageStyleInterface $style
          */
@@ -261,7 +265,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         }
         return $dependencies;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -269,7 +273,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
     {
         $changed = parent::onDependencyRemoval($dependencies);
         $style_id = $this->getSetting('image_style');
-        
+
         /**
          * @var \Drupal\image\ImageStyleInterface $style
          */
@@ -287,5 +291,5 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         }
         return $changed;
     }
-    
+
 }
