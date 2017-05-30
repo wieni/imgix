@@ -5,8 +5,14 @@ namespace Drupal\imgix\Plugin\Field\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\ElementInfoManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\imgix\ImgixManagerInterface;
 
 /**
  * Plugin implementation of the 'imgix' widget.
@@ -19,14 +25,93 @@ use Drupal\Core\Render\Element;
  *   }
  * )
  */
-class ImgixWidget extends FileWidget
+class ImgixWidget extends FileWidget implements ContainerFactoryPluginInterface
 {
+    /** @var  ImgixManagerInterface */
+    protected $imgixManager;
+    /** @var  RendererInterface */
+    protected $renderer;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(
+        $plugin_id,
+        $plugin_definition,
+        FieldDefinitionInterface $field_definition,
+        array $settings,
+        array $third_party_settings,
+        ElementInfoManagerInterface $element_info,
+        ImgixManagerInterface $imgixManager,
+        RendererInterface $renderer
+    ) {
+        parent::__construct(
+            $plugin_id,
+            $plugin_definition,
+            $field_definition,
+            $settings,
+            $third_party_settings,
+            $element_info
+        );
+
+        $this->imgixManager = $imgixManager;
+        $this->renderer = $renderer;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param array $configuration
+     * @param string $plugin_id
+     * @param mixed $plugin_definition
+     * @return static
+     */
+    public static function create(
+        ContainerInterface $container,
+        array $configuration,
+        $plugin_id,
+        $plugin_definition
+    ) {
+        return new static(
+            $plugin_id,
+            $plugin_definition,
+            $configuration['field_definition'],
+            $configuration['settings'],
+            $configuration['third_party_settings'],
+            $container->get('element_info'),
+            $container->get('imgix.manager'),
+            $container->get('renderer')
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function defaultSettings()
+    {
+        return [
+                'preview_preset' => 'thumb',
+            ] + parent::defaultSettings();
+    }
+
     /**
      * {@inheritdoc}
      */
     public function settingsForm(array $form, FormStateInterface $form_state)
     {
-        return [];
+        $options = [];
+        foreach ($this->imgixManager->getPresets() as $preset) {
+            $options[$preset['key']] = $preset['key'];
+        }
+
+        $element['preview_preset'] = [
+            '#type' => 'select',
+            '#title' => t('Preview format'),
+            '#options' => $options,
+            '#default_value' => $this->getSetting('preview_preset'),
+            '#weight' => 16,
+        ];
+
+        return $element;
     }
 
     /**
@@ -34,13 +119,19 @@ class ImgixWidget extends FileWidget
      */
     public function settingsSummary()
     {
-        return [];
+        $summary = [];
+        $summary[] = t('Preset: @preset', ['@preset' => $this->getSetting('preview_preset')]);
+        return $summary;
     }
 
     /**
      * Overrides \Drupal\file\Plugin\Field\FieldWidget\FileWidget::formMultipleElements().
      *
      * Special handling for draggable multiple widgets and 'add more' button.
+     * @param FieldItemListInterface $items
+     * @param array $form
+     * @param FormStateInterface $form_state
+     * @return array
      */
     protected function formMultipleElements(
         FieldItemListInterface $items,
@@ -61,8 +152,7 @@ class ImgixWidget extends FileWidget
             // If there's only one field, return it as delta 0.
             if (empty($elements[0]['#default_value']['fids'])) {
                 $file_upload_help['#description'] = $this->getFilteredDescription();
-                $elements[0]['#description'] = \Drupal::service('renderer')
-                    ->renderPlain($file_upload_help);
+                $elements[0]['#description'] = $this->renderer->renderPlain($file_upload_help);
             }
 
             return $elements;
@@ -86,6 +176,12 @@ class ImgixWidget extends FileWidget
         $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
         $field_settings = $this->getFieldSettings();
+
+        $presets = $this->imgixManager->getPresets();
+        $element['#imgix_preset'] = 'thumb';
+        if (!empty($presets[$this->getSetting('preview_preset')]['key'])) {
+            $element['#imgix_preset'] = $presets[$this->getSetting('preview_preset')]['key'];
+        }
 
         // If not using custom extension validation, ensure this is an image.
         $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
@@ -116,6 +212,10 @@ class ImgixWidget extends FileWidget
      * Expands the image_image type to include the alt and title fields.
      *
      * This method is assigned as a #process callback in formElement() method.
+     * @param $element
+     * @param FormStateInterface $form_state
+     * @param $form
+     * @return
      */
     public static function process(
         $element,
@@ -129,17 +229,11 @@ class ImgixWidget extends FileWidget
             if (isset($element[$child]['filename']['#file']) && $element[$child]['filename']['#theme'] == 'file_link') {
                 unset($element[$child]['filename']['#theme']);
 
-                $url = \Drupal::service('imgix.manager')
-                    ->getImgixUrl(
-                        $element[$child]['filename']['#file'],
-                        [
-                            'auto' => 'format',
-                            'fit' => 'max',
-                            'h' => 150,
-                            'q' => 75,
-                            'w' => 150,
-                        ]
-                    );
+                // Yes I know no injection here. We can't access $this it in static context.
+                $url = \Drupal::service('imgix.manager')->getImgixUrlByPreset(
+                    $element[$child]['filename']['#file'],
+                    !empty($element['#imgix_preset']) ? $element['#imgix_preset']: 'thumb'
+                );
 
                 $element[$child]['preview'] = [
                     '#weight' => -10,
@@ -191,6 +285,8 @@ class ImgixWidget extends FileWidget
      *
      * This is separated in a validate function instead of a #required flag to
      * avoid being validated on the process callback.
+     * @param $element
+     * @param FormStateInterface $form_state
      */
     public static function validateRequiredFields(
         $element,
