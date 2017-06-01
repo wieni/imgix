@@ -45,11 +45,6 @@ class ImgixManager implements ImgixManagerInterface
         $this->logger = $channelFactory->get('imgix');
         $this->config = $config;
         $this->fileSystem = $fileSystem;
-
-        //$this->auth =  base64_encode($this->config->get('key') . ':' . $this->config->get('secret'));
-        //
-        //$protocol = ($this->config->get('https') ? 'https://': 'http://');
-        //$this->baseUri = new Uri($protocol . $this->config->get('host_admin'));
     }
 
     /**
@@ -63,6 +58,9 @@ class ImgixManager implements ImgixManagerInterface
             ->get('presets');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getImgixUrlByPreset(FileInterface $file, $preset)
     {
         $presets = $this->getPresets();

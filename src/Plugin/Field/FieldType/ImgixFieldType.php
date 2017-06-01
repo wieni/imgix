@@ -176,13 +176,4 @@ class ImgixFieldType extends FileItem
 
         return $element;
     }
-
-    /**
-     * This is separate because it should be dep injection but fieldType cannot
-     * cope with with that yet
-     */
-    protected function getImgixService()
-    {
-        return \Drupal::service('vrt_imagestore.manager');
-    }
 }
