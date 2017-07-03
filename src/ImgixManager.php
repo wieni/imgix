@@ -161,6 +161,6 @@ class ImgixManager implements ImgixManagerInterface
     {
         return $this
             ->config
-            ->get('imgix.settings')->getRawData();
+            ->get('imgix.settings')->get();
     }
 }
