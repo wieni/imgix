@@ -2,12 +2,12 @@ services:
     imgix.manager:
         class: Drupal\imgix\ImgixManager
         arguments:
-            - @logger.factory
-            - @config.factory
-            - @file_system
+            - '@logger.factory'
+            - '@config.factory'
+            - '@file_system'
+
     imgix.twig_extension:
         class: Drupal\imgix\TwigExtension\ImgixExtension
-        arguments:
-            - @imgix.manager
+        arguments: ['@imgix.manager']
         tags:
             - { name: twig.extension }
