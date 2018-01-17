@@ -110,11 +110,14 @@ class ImgixManager implements ImgixManagerInterface
                 $buildUrl = $path;
                 break;
             case self::SOURCE_S3:
-                // We liberally decide that you did NOT enter a S3 Bucket Prefix.
-                // Now it's basically also the path.
+                $hasPrefix = isset($settings['s3_has_prefix']) ? $settings['s3_has_prefix'] : false;
+
                 $buildUrl = explode("/", $pathInfo['path']);
-                array_shift($buildUrl); // The "/".
-                array_shift($buildUrl); // The bucket.
+                array_shift($buildUrl); // The "/"
+
+                if (!$hasPrefix) {
+                    array_shift($buildUrl); // The bucket.
+                }
 
                 $buildUrl = implode("/", $buildUrl);
                 break;

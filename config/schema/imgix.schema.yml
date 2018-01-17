@@ -11,6 +11,9 @@ imgix.settings:
         mapping_type:
           label: 'Source type'
           type: string
+        s3_has_prefix:
+          label: 'S3 bucket has prefix'
+          type: boolean
         mapping_url:
           label: 'Base URL'
           type: string

@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\imgix\ImgixManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -105,8 +106,19 @@ class ImgixSettings extends ConfigFormBase
                 's3' => 'Amazon S3',
             ),
             '#default_value' => $config->get('mapping_type'),
-            '#description' => $this->t('Do not use a S3 Bucket Prefix when using S3 as a Source Type'),
         );
+
+        $form['mapping']['s3_has_prefix'] = array(
+            '#type' => 'checkbox',
+            '#title' => $this->t('S3 bucket has prefix'),
+            '#default_value' => $config->get('s3_has_prefix'),
+        );
+
+        $form['mapping']['s3_has_prefix']['#states'] = [
+            'visible' => [
+                'input[name="mapping_type"]' => ['value' => ImgixManager::SOURCE_S3],
+            ],
+        ];
 
         // Todo not supporting mapping urls for now.
         //$form['mapping']['mapping_url'] = array(
