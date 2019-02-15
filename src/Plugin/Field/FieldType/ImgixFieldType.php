@@ -42,7 +42,7 @@ class ImgixFieldType extends FileItem
     public static function defaultFieldSettings()
     {
         $settings = array(
-            'file_extensions' => 'png gif jpg jpeg',
+            'file_extensions' => 'png gif jpg jpeg svg',
             'description_field_required' => 0,
             'title_field' => 0,
             'title_field_required' => 0,

@@ -184,7 +184,7 @@ class ImgixWidget extends FileWidget implements ContainerFactoryPluginInterface
         }
 
         // If not using custom extension validation, ensure this is an image.
-        $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
+        $supported_extensions = ['png', 'gif', 'jpg', 'jpeg', 'svg'];
         if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
             $extensions = $element['#upload_validators']['file_validate_extensions'][0];
         } else {

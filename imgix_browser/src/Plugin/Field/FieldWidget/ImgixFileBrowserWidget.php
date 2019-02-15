@@ -234,7 +234,7 @@ class ImgixFileBrowserWidget extends EntityReferenceBrowserWidget
     // See \Drupal\image\Plugin\Field\FieldWidget::formElement() for details.
     if ($this->fieldDefinition->getType() == 'image') {
         // If not using custom extension validation, ensure this is an image.
-      $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
+      $supported_extensions = ['png', 'gif', 'jpg', 'jpeg', 'svg'];
         $extensions = isset($settings['file_extensions']) ? $settings['file_extensions'] : implode(' ', $supported_extensions);
         $extensions = array_intersect(explode(' ', $extensions), $supported_extensions);
         $validators['file_validate_extensions'] = [implode(' ', $extensions)];
