@@ -12,6 +12,8 @@
     "prefer-stable": true,
     "type": "drupal-module",
     "require": {
+        "php": ">=7.0.0",
+        "drupal/core": "^8.7",
         "imgix/imgix-php": "1.1.0"
     }
 }
