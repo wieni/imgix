@@ -95,7 +95,7 @@ class ImgixManager implements ImgixManagerInterface
         }
 
         // Get the public path of the file.
-        $path = $file->url();
+        $path = $file->createFileUrl();
         $pathInfo = parse_url($path);
 
         $buildUrl = false;

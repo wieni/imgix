@@ -177,7 +177,7 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
         if ($imageLinkSetting == 'content') {
             $entity = $items->getEntity();
             if (!$entity->isNew()) {
-                $linkUrl = $entity->urlInfo();
+                $linkUrl = $entity->toUrl();
             }
         }
         elseif ($imageLinkSetting == 'file') {
