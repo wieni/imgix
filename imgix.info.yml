@@ -3,5 +3,3 @@ description: 'Integrates with Imgix, a real-time image processing and CDN.'
 type: module
 core_version_requirement: ^8 || ^9
 package: Media
-dependencies:
- - system (>=8.3)
