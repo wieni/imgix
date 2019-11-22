@@ -13,7 +13,7 @@
     "type": "drupal-module",
     "require": {
         "php": ">=7.0.0",
-        "drupal/core": "^8.7",
+        "drupal/core": "^8.7|^9.0",
         "imgix/imgix-php": "1.1.0"
     }
 }
