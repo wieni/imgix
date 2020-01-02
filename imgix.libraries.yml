@@ -1,8 +1,8 @@
 image-preview:
-  version: 1.x
-  js:
-    js/image-preview.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/jquery.once
+    version: 1.x
+    js:
+        js/image-preview.js: {}
+    dependencies:
+        - core/jquery
+        - core/drupal
+        - core/jquery.once

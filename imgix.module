@@ -2,9 +2,6 @@
 
 use Drupal\Core\Render\Element;
 
-/**
- * Implements hook_theme().
- */
 function imgix_theme($existing, $type, $theme, $path)
 {
     return [
@@ -37,8 +34,16 @@ function template_preprocess_imgix_widget(&$variables)
 {
     $element = $variables['element'];
 
-    $variables['attributes'] = array('class' => array('imgix-widget', 'js-form-managed-file', 'form-managed-file', 'clearfix'));
-    $variables['data'] = array();
+    $variables['attributes'] = [
+        'class' => [
+            'imgix-widget',
+            'js-form-managed-file',
+            'form-managed-file',
+            'clearfix',
+        ],
+    ];
+
+    $variables['data'] = [];
     foreach (Element::children($element) as $child) {
         $variables['data'][$child] = $element[$child];
     }

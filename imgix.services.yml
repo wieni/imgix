@@ -1,8 +1,13 @@
 services:
+    logger.channel.imgix:
+        class: Drupal\Core\Logger\LoggerChannel
+        factory: logger.factory:get
+        arguments: ['imgix']
+
     imgix.manager:
         class: Drupal\imgix\ImgixManager
         arguments:
-            - '@logger.factory'
+            - '@logger.channel.imgix'
             - '@config.factory'
             - '@file_system'
 

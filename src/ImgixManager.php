@@ -2,54 +2,36 @@
 
 namespace Drupal\imgix;
 
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\file\FileInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\ClientException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
-
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\file\FileInterface;
 use Imgix\UrlBuilder;
 
-/**
- * Class ImgixManager.
- *
- * @package Drupal\imgix
- */
 class ImgixManager implements ImgixManagerInterface
 {
-    const SOURCE_S3 = 's3';
-    const SOURCE_FOLDER = 'webfolder';
-    const SOURCE_PROXY = 'webproxy';
+    public const SOURCE_S3 = 's3';
+    public const SOURCE_FOLDER = 'webfolder';
+    public const SOURCE_PROXY = 'webproxy';
 
+    /** @var LoggerChannelInterface */
     protected $logger;
+    /** @var ConfigFactoryInterface */
     protected $config;
+    /** @var FileSystemInterface */
     protected $fileSystem;
 
-    protected $auth;
-    protected $baseUri;
-
-    /**
-     * Constructor for ImgixManager.
-     *
-     * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $channelFactory
-     * @param \Drupal\Core\Config\ConfigFactoryInterface        $config
-     * @param \Drupal\Core\File\FileSystemInterface             $fileSystem
-     */
     public function __construct(
-        LoggerChannelFactoryInterface $channelFactory,
+        LoggerChannelInterface $logger,
         ConfigFactoryInterface $config,
         FileSystemInterface $fileSystem
     ) {
-        $this->logger = $channelFactory->get('imgix');
+        $this->logger = $logger;
         $this->config = $config;
         $this->fileSystem = $fileSystem;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getPresets()
     {
         return $this
@@ -58,9 +40,6 @@ class ImgixManager implements ImgixManagerInterface
             ->get('presets');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getImgixUrlByPreset(FileInterface $file, $preset)
     {
         $presets = $this->getPresets();
@@ -81,11 +60,6 @@ class ImgixManager implements ImgixManagerInterface
         return $this->getImgixUrl($file, $params);
     }
 
-    /**
-     * @inheritdoc
-     *
-     * TODO: Do some logging.
-     */
     public function getImgixUrl(FileInterface $file, $parameters)
     {
         $settings = $this->getSettings();
@@ -110,16 +84,16 @@ class ImgixManager implements ImgixManagerInterface
                 $buildUrl = $path;
                 break;
             case self::SOURCE_S3:
-                $hasPrefix = isset($settings['s3_has_prefix']) ? $settings['s3_has_prefix'] : false;
+                $hasPrefix = $settings['s3_has_prefix'] ?? false;
 
-                $buildUrl = explode("/", $pathInfo['path']);
+                $buildUrl = explode('/', $pathInfo['path']);
                 array_shift($buildUrl); // The "/"
 
                 if (!$hasPrefix) {
                     array_shift($buildUrl); // The bucket.
                 }
 
-                $buildUrl = implode("/", $buildUrl);
+                $buildUrl = implode('/', $buildUrl);
                 break;
         }
 
@@ -148,9 +122,6 @@ class ImgixManager implements ImgixManagerInterface
         return $url;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getMappingTypes()
     {
         return [

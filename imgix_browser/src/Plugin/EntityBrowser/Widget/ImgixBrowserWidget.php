@@ -17,11 +17,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * Uses a view to provide entity listing in a browser's widget.
  *
  * @EntityBrowserWidget(
- *   id = "imgix",
- *   label = @Translation("Imgix"),
- *   provider = "imgix_browser",
- *   description = @Translation("Image listings for imgix fields"),
- *   auto_select = TRUE
+ *     id = "imgix",
+ *     label = @Translation("Imgix"),
+ *     provider = "imgix_browser",
+ *     description = @Translation("Image listings for imgix fields"),
+ *     auto_select = TRUE
  * )
  */
 class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInterface
@@ -29,23 +29,6 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
     /** @var ImgixManagerInterface */
     protected $imgixManager;
 
-    /**
-     * Constructs a new View object.
-     *
-     * @param array $configuration
-     *   A configuration array containing information about the plugin instance
-     * @param string $plugin_id
-     *   The plugin_id for the plugin instance
-     * @param mixed $plugin_definition
-     *   The plugin implementation definition
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-     *   Event dispatcher service
-     * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-     *   The entity type manager
-     * @param \Drupal\entity_browser\WidgetValidationManager $validation_manager
-     *   The Widget Validation Manager service
-     * @param ImgixManagerInterface $imgixManager
-     */
     public function __construct(
         array $configuration,
         $plugin_id,
@@ -59,19 +42,6 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
         $this->imgixManager = $imgixManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function defaultConfiguration()
-    {
-        return array(
-                'preset' => null,
-            ) + parent::defaultConfiguration();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
     {
         return new static(
@@ -85,9 +55,13 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function defaultConfiguration()
+    {
+        return [
+            'preset' => null,
+        ] + parent::defaultConfiguration();
+    }
+
     public function getForm(array &$original_form, FormStateInterface $form_state, array $additional_widget_parameters)
     {
         $form = parent::getForm($original_form, $form_state, $additional_widget_parameters);
@@ -174,9 +148,6 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
         return $element;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(array &$form, FormStateInterface $form_state)
     {
         $user_input = $form_state->getUserInput();
@@ -213,18 +184,12 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function submit(array &$element, array &$form, FormStateInterface $form_state)
     {
         $entities = $this->prepareEntities($form, $form_state);
         $this->selectEntities($entities, $form_state);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildConfigurationForm(array $form, FormStateInterface $form_state)
     {
         $form = parent::buildConfigurationForm($form, $form_state);
@@ -247,9 +212,6 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
         return $form;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function submitConfigurationForm(array &$form, FormStateInterface $form_state)
     {
         $values = $form_state->getValues()['table'][$this->uuid()]['form'];
@@ -258,20 +220,19 @@ class ImgixBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
         $this->configuration['preset'] = $values['preset'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function prepareEntities(array $form, FormStateInterface $form_state)
     {
         $selected_rows = array_values(array_filter($form_state->getUserInput()['entity_browser_select']));
         $entities = [];
+
         foreach ($selected_rows as $row) {
-            list($type, $id) = explode(':', $row);
+            [$type, $id] = explode(':', $row);
             $storage = $this->entityTypeManager->getStorage($type);
             if ($entity = $storage->load($id)) {
                 $entities[] = $entity;
             }
         }
+
         return $entities;
     }
 }

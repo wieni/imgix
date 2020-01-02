@@ -1,61 +1,35 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\imgix\Form\ImgixPresets
- */
 namespace Drupal\imgix\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
-
 use Drupal\imgix\ImgixManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ImgixPresets extends FormBase
 {
-
+    /** @var EntityTypeManagerInterface */
     protected $entityTypeManager;
+    /** @var ImgixManagerInterface */
     protected $imgixManager;
 
-    /**
-     * Constructs a \Drupal\system\ConfigFormBase object.
-     *
-     * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-     * @param \Drupal\imgix\ImgixManagerInterface            $imgixManager
-     */
-    public function __construct(
-        EntityTypeManagerInterface $entityTypeManager,
-        ImgixManagerInterface $imgixManager
-    ) {
-        $this->entityTypeManager = $entityTypeManager;
-        $this->imgixManager = $imgixManager;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function create(ContainerInterface $container)
     {
-        return new static(
-            $container->get('entity_type.manager'),
-            $container->get('imgix.manager')
-        );
+        $instance = parent::create($container);
+        $instance->entityTypeManager = $container->get('entity_type.manager');
+        $instance->imgixManager = $container->get('imgix.manager');
+
+        return $instance;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormId()
     {
         return 'imgix_profiles';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(array $form, FormStateInterface $form_state)
     {
         $form['presets'] = [
@@ -68,29 +42,31 @@ class ImgixPresets extends FormBase
         ];
 
         foreach ($this->imgixManager->getPresets() as $key => $preset) {
-            $form['presets'][$key]['key'] = array(
+            $form['presets'][$key]['key'] = [
                 '#markup' => $preset['key'],
                 '#title' => $this->t('Key'),
                 '#title_display' => 'invisible',
-            );
-            $form['presets'][$key]['query'] = array(
+            ];
+
+            $form['presets'][$key]['query'] = [
                 '#markup' => $preset['query'],
                 '#title' => $this->t('Parameter string'),
                 '#title_display' => 'invisible',
-            );
+            ];
+
             $form['presets'][$key]['operations'] = [
                 '#type' => 'dropbutton',
                 '#links' => [
                     'edit' => [
                         'url' => Url::fromRoute(
-                            "imgix.presets.add",
+                            'imgix.presets.add',
                             [
                                 'key' => $key,
                             ],
                             [
                                 'query' => [
                                     'destination' => Url::fromRoute(
-                                        "imgix.presets"
+                                        'imgix.presets'
                                     )->toString(),
                                 ],
                             ]
@@ -99,14 +75,14 @@ class ImgixPresets extends FormBase
                     ],
                     'delete' => [
                         'url' => Url::fromRoute(
-                            "imgix.presets.delete",
+                            'imgix.presets.delete',
                             [
                                 'key' => $key,
                             ],
                             [
                                 'query' => [
                                     'destination' => Url::fromRoute(
-                                        "imgix.presets"
+                                        'imgix.presets'
                                     )->toString(),
                                 ],
                             ]
@@ -120,11 +96,7 @@ class ImgixPresets extends FormBase
         return $form;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function submitForm(array &$form, FormStateInterface $form_state)
     {
-        parent::submitForm($form, $form_state);
     }
 }

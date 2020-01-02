@@ -1,8 +1,8 @@
 imgix.presets.add:
-  route_name: imgix.presets.add
-  title: 'Add preset'
-  appears_on:
-    - imgix.presets
-  options:
-      query:
-        destination: '/admin/config/media/imgix/presets'
+    route_name: imgix.presets.add
+    title: 'Add preset'
+    appears_on:
+        - imgix.presets
+    options:
+        query:
+            destination: '/admin/config/media/imgix/presets'

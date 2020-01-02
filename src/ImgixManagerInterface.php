@@ -4,11 +4,6 @@ namespace Drupal\imgix;
 
 use Drupal\file\FileInterface;
 
-/**
- * Class ImgixManagerInterface.
- *
- * @package Drupal\imgix
- */
 interface ImgixManagerInterface
 {
     /**
@@ -19,9 +14,9 @@ interface ImgixManagerInterface
     public function getPresets();
 
     /**
-     * @param \Drupal\file\FileInterface $file
+     * @param FileInterface $file
      *   File.
-     * @param $preset
+     * @param string $preset
      *   The preset to render the image in
      *
      * @return string
@@ -31,7 +26,7 @@ interface ImgixManagerInterface
     /**
      * @param \Drupal\file\FileInterface $file
      *   File.
-     * @param $parameters
+     * @param array $parameters
      *   The parameters to pass on to imgix.
      *
      * @return string
