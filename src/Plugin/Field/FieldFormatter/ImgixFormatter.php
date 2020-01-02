@@ -11,7 +11,6 @@ use Drupal\Core\Url;
 use Drupal\file\Plugin\Field\FieldFormatter\GenericFileFormatter;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\imgix\ImgixManagerInterface;
-use Drupal\imgix\Plugin\Field\FieldType\ImgixFieldType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

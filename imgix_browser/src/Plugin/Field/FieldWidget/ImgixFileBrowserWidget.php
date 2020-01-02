@@ -7,16 +7,11 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_browser\FieldWidgetDisplayManager;
 use Drupal\entity_browser\Plugin\Field\FieldWidget\EntityReferenceBrowserWidget;
 use Drupal\imgix\ImgixManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Imgix Entity browser file widget.
@@ -315,8 +310,8 @@ class ImgixFileBrowserWidget extends EntityReferenceBrowserWidget
                         '#default_value' => $description,
                         '#size' => 45,
                         '#maxlength' => $fileSettings->get('description.length'),
-                        '#access' => (bool)$fieldSettings['description_field'],
-                        '#required' => (bool)$fieldSettings['description_field_required'],
+                        '#access' => (bool) $fieldSettings['description_field'],
+                        '#required' => (bool) $fieldSettings['description_field_required'],
                         '#element_validate' => $fieldSettings['description_field_required'] == 1 ? [
                             [
                                 get_called_class(),

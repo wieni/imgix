@@ -4,35 +4,35 @@ namespace Drupal\imgix\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
 /**
-* @FieldType(
-*   id = "imgix",
-*   label = @Translation("Imgix image"),
-*   description = @Translation("This field stores the ID of a file as an string value."),
-*   category = @Translation("Reference"),
-*   default_widget = "imgix",
-*   default_formatter = "imgix_formatter",
-*   column_groups = {
-*     "file" : {
-*       "label" : @Translation("File"),
-*       "columns" : {
-*         "target_id", "width", "height"
-*       },
-*       "require_all_groups_for_translation" : TRUE
-*     },
-*     "title" : {
-*       "label" : @Translation("Title"),
-*       "translatable" : TRUE
-*     },
-*   },
-*   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
-*   constraints = {"ReferenceAccess" : {}, "FileValidation" : {}}
-* )
-*/
+ * @FieldType(
+ *     id = "imgix",
+ *     label = @Translation("Imgix image"),
+ *     description = @Translation("This field stores the ID of a file as an string value."),
+ *     category = @Translation("Reference"),
+ *     default_widget = "imgix",
+ *     default_formatter = "imgix_formatter",
+ *     column_groups = {
+ *         "file" : {
+ *             "label" : @Translation("File"),
+ *             "columns" : {
+ *                 "target_id", "width", "height"
+ *             },
+ *             "require_all_groups_for_translation" : TRUE
+ *         },
+ *         "title" : {
+ *             "label" : @Translation("Title"),
+ *             "translatable" : TRUE
+ *         },
+ *     },
+ *     list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
+ *     constraints = {"ReferenceAccess" : {}, "FileValidation" : {}}
+ * )
+ */
 class ImgixFieldType extends FileItem
 {
     public static function defaultFieldSettings()
@@ -45,17 +45,17 @@ class ImgixFieldType extends FileItem
         ] + parent::defaultFieldSettings();
     }
 
-    public function getFile()
+    public function getFile(): ?FileInterface
     {
         return $this->entity;
     }
 
-    public function getCaption()
+    public function getCaption(): ?string
     {
         return $this->get('description')->getValue();
     }
 
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->get('title')->getValue();
     }

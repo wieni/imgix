@@ -4,7 +4,6 @@ namespace Drupal\imgix;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\file\FileInterface;
 use Imgix\UrlBuilder;
@@ -32,15 +31,14 @@ class ImgixManager implements ImgixManagerInterface
         $this->fileSystem = $fileSystem;
     }
 
-    public function getPresets()
+    public function getPresets(): array
     {
-        return $this
-            ->config
+        return $this->config
             ->get('imgix.presets')
             ->get('presets');
     }
 
-    public function getImgixUrlByPreset(FileInterface $file, $preset)
+    public function getImgixUrlByPreset(FileInterface $file, string $preset): ?string
     {
         $presets = $this->getPresets();
 
@@ -60,12 +58,12 @@ class ImgixManager implements ImgixManagerInterface
         return $this->getImgixUrl($file, $params);
     }
 
-    public function getImgixUrl(FileInterface $file, $parameters)
+    public function getImgixUrl(FileInterface $file, array $parameters): ?string
     {
         $settings = $this->getSettings();
 
         if (empty($settings['source_domain'])) {
-            return '';
+            return null;
         }
 
         // Get the public path of the file.
@@ -98,7 +96,7 @@ class ImgixManager implements ImgixManagerInterface
         }
 
         if (!$buildUrl) {
-            return '';
+            return null;
         }
 
         $builder = new UrlBuilder($settings['source_domain']);
@@ -122,7 +120,7 @@ class ImgixManager implements ImgixManagerInterface
         return $url;
     }
 
-    public function getMappingTypes()
+    public function getMappingTypes(): array
     {
         return [
             self::SOURCE_FOLDER => 'Web Folder',
@@ -131,10 +129,8 @@ class ImgixManager implements ImgixManagerInterface
         ];
     }
 
-    private function getSettings()
+    protected function getSettings(): array
     {
-        return $this
-            ->config
-            ->get('imgix.settings')->get();
+        return $this->config->get('imgix.settings')->get() ?? [];
     }
 }

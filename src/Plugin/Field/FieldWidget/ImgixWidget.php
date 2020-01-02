@@ -2,13 +2,9 @@
 
 namespace Drupal\imgix\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 use Drupal\imgix\ImgixManagerInterface;
@@ -23,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     }
  * )
  */
-class ImgixWidget extends FileWidget implements ContainerFactoryPluginInterface
+class ImgixWidget extends FileWidget
 {
     /** @var ImgixManagerInterface */
     protected $imgixManager;
@@ -71,7 +67,7 @@ class ImgixWidget extends FileWidget implements ContainerFactoryPluginInterface
     public function settingsSummary()
     {
         return [
-            $this->t('Preset: @preset', ['@preset' => $this->getSetting('preview_preset')])
+            $this->t('Preset: @preset', ['@preset' => $this->getSetting('preview_preset')]),
         ];
     }
 
@@ -93,11 +89,7 @@ class ImgixWidget extends FileWidget implements ContainerFactoryPluginInterface
 
         // If not using custom extension validation, ensure this is an image.
         $supportedExtensions = ['png', 'gif', 'jpg', 'jpeg', 'svg', 'jfif'];
-        if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
-            $extensions = $element['#upload_validators']['file_validate_extensions'][0];
-        } else {
-            $extensions = implode(' ', $supportedExtensions);
-        }
+        $extensions = $element['#upload_validators']['file_validate_extensions'][0] ?? implode(' ', $supportedExtensions);
 
         $extensions = array_intersect(
             explode(' ', $extensions),
@@ -151,13 +143,11 @@ class ImgixWidget extends FileWidget implements ContainerFactoryPluginInterface
             '#weight' => -10,
             '#access' => (bool) $item['fids'] && $element['#title_field'],
             '#required' => $element['#title_field_required'],
-            '#element_validate' => $element['#title_field_required'] == 1 ?
-            [
-                [
-                    get_called_class(),
-                    'validateRequiredFields',
-                ],
-            ] : [],
+            '#element_validate' => $element['#title_field_required'] == 1
+                ? [
+                    [static::class, 'validateRequiredFields'],
+                ]
+                : [],
         ];
 
         $element = parent::process($element, $form_state, $form);
@@ -189,15 +179,9 @@ class ImgixWidget extends FileWidget implements ContainerFactoryPluginInterface
             $form_state->setLimitValidationErrors([]);
             return;
         }
-
-        $parents = $element['#parents'];
-        $field = array_pop($parents);
-        $imageField = NestedArray::getValue($form_state->getUserInput(), $parents);
     }
 
-    /**
-     * Special handling for draggable multiple widgets and 'add more' button.
-     */
+    /** Special handling for draggable multiple widgets and 'add more' button. */
     protected function formMultipleElements(
         FieldItemListInterface $items,
         array &$form,
