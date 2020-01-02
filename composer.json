@@ -1,5 +1,6 @@
 {
     "name": "wieni/imgix",
+    "type": "drupal-module",
     "description": "Upload files and render them through imgix",
     "license": "MIT",
     "authors": [
@@ -8,18 +9,17 @@
             "email": "info@wieni.be"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "type": "drupal-module",
     "require": {
         "php": ">=7.0.0",
-        "drupal/core": "^8.7|^9.0",
+        "drupal/core": "^8.7 || ^9.0",
         "imgix/imgix-php": "1.1.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.0",
         "wieni/wmcodestyle": "^1.0"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "coding-standards": [
             "@composer normalize",
