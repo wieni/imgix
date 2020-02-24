@@ -5,16 +5,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [8.4.0] - 2020-02-24
 ### Added
 - Add coding standard fixers
 - Add license
+- Add changelog
 - Add issue & pull request templates
+- Add mp4 & webm to supported file extensions
 
 ### Changed
 - Update .gitignore
 - Fix code style
 - Normalize composer.json
 - Add argument & return type hints
+
+### Fixed
+- Add back required core key
 
 ## [8.3.2] - 2019-11-22
 ### Changed
