@@ -1,5 +1,5 @@
 name: 'Imgix'
-description: 'Integrates with Imgix, a real-time image processing and CDN.'
+description: 'Render Drupal 8 images through Imgix, a real-time image processing service and CDN'
 type: module
 core: 8.x
 core_version_requirement: ^8 || ^9

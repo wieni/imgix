@@ -1,7 +1,7 @@
 {
     "name": "wieni/imgix",
     "type": "drupal-module",
-    "description": "Upload files and render them through imgix",
+    "description": "Render Drupal 8 images through Imgix, a real-time image processing service and CDN",
     "license": "MIT",
     "authors": [
         {

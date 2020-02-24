@@ -5,7 +5,7 @@ imgix
 [![Total Downloads](https://poser.pugx.org/wieni/imgix/downloads)](https://packagist.org/packages/wieni/imgix)
 [![License](https://poser.pugx.org/wieni/imgix/license)](https://packagist.org/packages/wieni/imgix)
 
-> Upload files and render them through Imgix
+> Render Drupal 8 images through Imgix, a real-time image processing service and CDN
 
 ## Why?
 - **Build Imgix urls** for any file entity using a set of parameters or a configured preset
