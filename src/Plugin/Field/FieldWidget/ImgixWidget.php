@@ -88,7 +88,7 @@ class ImgixWidget extends FileWidget
         }
 
         // If not using custom extension validation, ensure this is an image.
-        $supportedExtensions = ['png', 'gif', 'jpg', 'jpeg', 'svg', 'jfif', 'mp4', 'webm'];
+        $supportedExtensions = ImgixManagerInterface::SUPPORTED_EXTENSIONS;
         $extensions = $element['#upload_validators']['file_validate_extensions'][0] ?? implode(' ', $supportedExtensions);
 
         $extensions = array_intersect(

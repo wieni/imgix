@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
+use Drupal\imgix\ImgixManagerInterface;
 
 /**
  * @FieldType(
@@ -38,7 +39,7 @@ class ImgixFieldType extends FileItem
     public static function defaultFieldSettings()
     {
         return [
-            'file_extensions' => 'png gif jpg jpeg svg jfif',
+            'file_extensions' => ImgixManagerInterface::SUPPORTED_EXTENSIONS,
             'description_field_required' => 0,
             'title_field' => 0,
             'title_field_required' => 0,
