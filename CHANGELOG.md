@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.5.0] - 2020-02-24
+### Changed
+- Move supported file extensions to constant
+- Add file & imgix dependencies to the imgix_browser module
+- Add file dependency to the imgix module
+- Change PHP version requirement to 7.1
+- Update module description
+- Update README
+- Code cleanup
+
 ## [8.4.0] - 2020-02-24
 ### Added
 - Add coding standard fixers
