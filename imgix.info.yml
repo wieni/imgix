@@ -1,5 +1,6 @@
 name: 'Imgix'
 description: 'Integrates with Imgix, a real-time image processing and CDN.'
 type: module
+core: 8.x
 core_version_requirement: ^8 || ^9
 package: Media
