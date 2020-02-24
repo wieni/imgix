@@ -3,13 +3,11 @@
 namespace Drupal\imgix\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\file\Plugin\Field\FieldFormatter\GenericFileFormatter;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\imgix\ImgixManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,45 +27,21 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
     /** @var ImgixManagerInterface */
     protected $imgixManager;
 
-    public function __construct(
-        $plugin_id,
-        $plugin_definition,
-        FieldDefinitionInterface $field_definition,
-        array $settings,
-        $label,
-        $view_mode,
-        array $third_party_settings,
-        ImgixManagerInterface $imgixManager
-    ) {
-        parent::__construct(
-            $plugin_id,
-            $plugin_definition,
-            $field_definition,
-            $settings,
-            $label,
-            $view_mode,
-            $third_party_settings
-        );
-
-        $this->imgixManager = $imgixManager;
-    }
-
     public static function create(
         ContainerInterface $container,
         array $configuration,
-        $plugin_id,
-        $plugin_definition
+        $pluginId,
+        $pluginDefinition
     ) {
-        return new static(
-            $plugin_id,
-            $plugin_definition,
-            $configuration['field_definition'],
-            $configuration['settings'],
-            $configuration['label'],
-            $configuration['view_mode'],
-            $configuration['third_party_settings'],
-            $container->get('imgix.manager')
+        $instance = parent::create(
+            $container,
+            $configuration,
+            $pluginId,
+            $pluginDefinition
         );
+        $instance->imgixManager = $container->get('imgix.manager');
+
+        return $instance;
     }
 
     public static function defaultSettings()
@@ -80,32 +54,28 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
 
     public function settingsForm(array $form, FormStateInterface $form_state)
     {
-        $presets = $this->imgixManager->getPresets();
-        $options = [];
-
-        foreach ($presets as $key => $preset) {
-            $options[$key] = ucfirst($preset['key']) . ' (' . $preset['query'] . ')';
-        }
-
         $element['image_preset'] = [
-            '#title' => t('Imgix preset'),
+            '#title' => $this->t('Imgix preset'),
             '#type' => 'select',
             '#default_value' => $this->getSetting('image_preset'),
-            '#empty_option' => t('None (original image)'),
-            '#options' => $options,
-        ];
-
-        $linkTypes = [
-            'content' => t('Content'),
-            'file' => t('File'),
+            '#empty_option' => $this->t('None (original image)'),
+            '#options' => array_map(
+                static function (array $preset) {
+                    return ucfirst($preset['key']) . ' (' . $preset['query'] . ')';
+                },
+                $this->imgixManager->getPresets()
+            ),
         ];
 
         $element['image_link'] = [
-            '#title' => t('Link image to'),
+            '#title' => $this->t('Link image to'),
             '#type' => 'select',
             '#default_value' => $this->getSetting('image_link'),
-            '#empty_option' => t('Nothing'),
-            '#options' => $linkTypes,
+            '#empty_option' => $this->t('Nothing'),
+            '#options' => [
+                'content' => $this->t('Content'),
+                'file' => $this->t('File'),
+            ],
         ];
 
         return $element;
@@ -125,12 +95,12 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                 ['@preset' => ucfirst($presets[$presetSetting]['key'])]
             );
         } else {
-            $summary[] = t('Original image');
+            $summary[] = $this->t('Original image');
         }
 
         $linkTypes = [
-            'content' => t('Linked to content'),
-            'file' => t('Linked to file'),
+            'content' => $this->t('Linked to content'),
+            'file' => $this->t('Linked to file'),
         ];
 
         // Display this setting only if image is linked.
@@ -163,18 +133,6 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
             $linkFile = true;
         }
 
-        // Get the params for the given preset.
-        $presetSetting = $this->getSetting('image_preset');
-        $presets = $this->imgixManager->getPresets();
-        $params = [];
-        if (isset($presets[$presetSetting])) {
-            $tmp = explode('&', $presets[$presetSetting]['query']);
-            foreach ($tmp as $value) {
-                $tmp2 = explode('=', $value);
-                $params[$tmp2[0]] = $tmp2[1];
-            }
-        }
-
         // Collect cache tags to be added for each item in the field.
         $baseCacheTags = [];
         $meta = [];
@@ -205,12 +163,8 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                 $file->getCacheTags()
             );
 
-            $url = $this->imgixManager->getImgixUrl($file, $params);
-
             $elements[$delta] = [
                 '#theme' => 'imgix_image',
-                '#preset' => $presetSetting,
-                '#url' => $url,
                 '#linkUrl' => $linkUrl,
                 '#title' => !empty($meta[$file->id()]) ? $meta[$file->id()]['title'] : '',
                 '#caption' => !empty($meta[$file->id()]) ? $meta[$file->id()]['caption'] : '',
@@ -219,43 +173,13 @@ class ImgixFormatter extends GenericFileFormatter implements ContainerFactoryPlu
                     'contexts' => $cacheContexts,
                 ],
             ];
-        }
 
-        return $elements;
-    }
-
-    public function calculateDependencies()
-    {
-        $dependencies = parent::calculateDependencies();
-        $styleId = $this->getSetting('image_style');
-
-        if ($styleId && $style = ImageStyle::load($styleId)) {
-            // If this formatter uses a valid image style to display the image, add
-            // the image style configuration entity as dependency of this formatter.
-            $dependencies[$style->getConfigDependencyKey()][] = $style->getConfigDependencyName();
-        }
-
-        return $dependencies;
-    }
-
-    public function onDependencyRemoval(array $dependencies)
-    {
-        $changed = parent::onDependencyRemoval($dependencies);
-        $styleId = $this->getSetting('image_style');
-
-        if ($styleId && $style = ImageStyle::load($styleId)) {
-            if (!empty($dependencies[$style->getConfigDependencyKey()][$style->getConfigDependencyName()])) {
-                $replacement_id = $this->imageStyleStorage->getReplacementId($styleId);
-                // If a valid replacement has been provided in the storage, replace the
-                // image style with the replacement and signal that the formatter plugin
-                // settings were updated.
-                if ($replacement_id && ImageStyle::load($replacement_id)) {
-                    $this->setSetting('image_style', $replacement_id);
-                    $changed = true;
-                }
+            if ($preset = $this->getSetting('image_preset')) {
+                $elements[$delta]['#preset'] = $preset;
+                $elements[$delta]['#url'] = $this->imgixManager->getImgixUrlByPreset($file, $preset);
             }
         }
 
-        return $changed;
+        return $elements;
     }
 }
