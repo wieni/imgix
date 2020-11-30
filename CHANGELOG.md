@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.5.2] - 2020-11-30
+### Fixed
+- Fix auto upload not working in Imgix widget
+
 ## [8.5.1] - 2020-07-23
 ### Changed
 - Update drupal/core version requirement

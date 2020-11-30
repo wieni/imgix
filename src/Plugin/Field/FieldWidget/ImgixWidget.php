@@ -152,6 +152,7 @@ class ImgixWidget extends FileWidget
 
         $element = parent::process($element, $form_state, $form);
 
+        $element['#attached']['library'][] = 'file/drupal.file';
         $element['#attached']['library'][] = 'imgix/image-preview';
 
         $element['#description_display'] = 'before';
