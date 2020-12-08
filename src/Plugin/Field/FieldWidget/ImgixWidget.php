@@ -4,7 +4,6 @@ namespace Drupal\imgix\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 use Drupal\imgix\ImgixManagerInterface;
@@ -82,25 +81,24 @@ class ImgixWidget extends FileWidget
         $fieldSettings = $this->getFieldSettings();
         $presets = $this->imgixManager->getPresets();
 
-        $element['#imgix_preset'] = 'thumb';
-        if (!empty($presets[$this->getSetting('preview_preset')]['key'])) {
-            $element['#imgix_preset'] = $presets[$this->getSetting('preview_preset')]['key'];
-        }
-
-        // If not using custom extension validation, ensure this is an image.
+        // If using custom extension validation, ensure that the extensions are
+        // supported. Otherwise, validate against all supported extensions.
         $supportedExtensions = ImgixManagerInterface::SUPPORTED_EXTENSIONS;
         $extensions = $element['#upload_validators']['file_validate_extensions'][0] ?? implode(' ', $supportedExtensions);
-
-        $extensions = array_intersect(
-            explode(' ', $extensions),
-            $supportedExtensions
-        );
-
+        $extensions = array_intersect(explode(' ', $extensions), $supportedExtensions);
         $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
+
+        // Add mobile device image capture acceptance.
+        $element['#accept'] = 'image/*';
 
         // Add properties needed by process() method.
         $element['#title_field'] = $fieldSettings['title_field'];
         $element['#title_field_required'] = $fieldSettings['title_field_required'];
+
+        $element['#imgix_preset'] = 'thumb';
+        if (!empty($presets[$this->getSetting('preview_preset')]['key'])) {
+            $element['#imgix_preset'] = $presets[$this->getSetting('preview_preset')]['key'];
+        }
 
         return $element;
     }
@@ -110,27 +108,18 @@ class ImgixWidget extends FileWidget
         $item = $element['#value'];
         $item['fids'] = $element['fids']['#value'];
 
-        foreach (Element::children($element) as $child) {
-            if (
-                !isset($element[$child]['filename']['#file'])
-                || $element[$child]['filename']['#theme'] !== 'file_link'
-            ) {
-                continue;
-            }
+        if (!empty($element['#files']) && !empty($element['#imgix_preset'])) {
+            $file = reset($element['#files']);
+            $url = \Drupal::service('imgix.manager')
+                ->getImgixUrlByPreset($file, $element['#imgix_preset']);
 
-            unset($element[$child]['filename']['#theme']);
-
-            $url = \Drupal::service('imgix.manager')->getImgixUrlByPreset(
-                $element[$child]['filename']['#file'],
-                !empty($element['#imgix_preset']) ? $element['#imgix_preset'] : 'thumb'
-            );
-
-            $element[$child]['preview'] = [
+            $element['preview'] = [
                 '#weight' => -10,
-                '#theme' => 'imgix_image',
-                '#url' => $url,
-                '#title' => $item['title'] ?? '',
-                '#caption' => '',
+                '#theme' => 'image',
+                '#attributes' => [
+                    'src' => $url,
+                    'title' => $item['title'] ?? '',
+                ]
             ];
         }
 
@@ -144,14 +133,13 @@ class ImgixWidget extends FileWidget
             '#access' => (bool) $item['fids'] && $element['#title_field'],
             '#required' => $element['#title_field_required'],
             '#element_validate' => $element['#title_field_required'] == 1
-                ? [
-                    [static::class, 'validateRequiredFields'],
-                ]
+                ? [[static::class, 'validateRequiredFields']]
                 : [],
         ];
 
         $element = parent::process($element, $form_state, $form);
 
+        $element['#theme'] = 'image_widget';
         $element['#attached']['library'][] = 'file/drupal.file';
         $element['#attached']['library'][] = 'imgix/image-preview';
 
