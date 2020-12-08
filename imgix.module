@@ -15,36 +15,5 @@ function imgix_theme($existing, $type, $theme, $path)
                 'caption' => null,
             ],
         ],
-        'imgix_widget' => [
-            'render element' => 'element',
-        ],
     ];
-}
-
-/**
- * Prepares variables for image widget templates.
- *
- * Default template: image-widget.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: A render element representing the image field widget.
- */
-function template_preprocess_imgix_widget(&$variables)
-{
-    $element = $variables['element'];
-
-    $variables['attributes'] = [
-        'class' => [
-            'imgix-widget',
-            'js-form-managed-file',
-            'form-managed-file',
-            'clearfix',
-        ],
-    ];
-
-    $variables['data'] = [];
-    foreach (Element::children($element) as $child) {
-        $variables['data'][$child] = $element[$child];
-    }
 }
