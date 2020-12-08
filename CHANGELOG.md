@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.6.0] - 2020-12-08
+### Changed
+- Update field widget to function/look more like the default image widget
+
+### Removed
+- Remove unused template
+
 ## [8.5.2] - 2020-11-30
 ### Fixed
 - Fix auto upload not working in Imgix widget
