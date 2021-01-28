@@ -2,6 +2,7 @@
 
 namespace Drupal\imgix\TwigExtension;
 
+use Drupal\file\FileInterface;
 use Drupal\imgix\ImgixManagerInterface;
 use Drupal\imgix\Plugin\Field\FieldType\ImgixFieldType;
 
@@ -36,12 +37,12 @@ class ImgixExtension extends \Twig_Extension
 
     public function imgix($file, $preset)
     {
-        if (!$file) {
-            return 'https://placeholdit.imgix.net/~text?txtsize=33&txt=no_image&w=200&h=200';
-        }
-
         if ($file instanceof ImgixFieldType) {
             $file = $file->getFile();
+        }
+
+        if (!$file instanceof FileInterface) {
+            return '';
         }
 
         return $this->imgixManager->getImgixUrlByPreset($file, $preset);
