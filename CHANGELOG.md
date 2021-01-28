@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.6.1] - 2021-01-28
+### Changed
+- Fix possible TypeError
+
 ## [8.6.0] - 2020-12-08
 ### Changed
 - Update field widget to function/look more like the default image widget
