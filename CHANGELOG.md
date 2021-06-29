@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.0] - 2020-07-23
+### Removed
+- Remove field type, widget & formatter
+- Remove `imgix_image` theme hook
+- Remove Imgix presets in favour of core image styles
+- Remove the `administer imgix` permission
+
 ## [8.6.1] - 2021-01-28
 ### Changed
 - Fix possible TypeError

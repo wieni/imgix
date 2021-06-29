@@ -1,9 +1,0 @@
-imgix.settings:
-    title: 'Settings'
-    route_name: imgix.settings
-    base_route: imgix.settings
-
-imgix.presets:
-    title: 'Presets'
-    route_name: imgix.presets
-    base_route: imgix.settings

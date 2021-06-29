@@ -4,15 +4,12 @@ namespace Drupal\imgix;
 
 use Drupal\file\FileInterface;
 
+/** @deprecated This interface is now obsolete. */
 interface ImgixManagerInterface
 {
-    public const SUPPORTED_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg', 'svg', 'jfif', 'mp4', 'webm'];
-
-    public function getPresets(): array;
-
+    /** @deprecated Use ImageStyleInterface::buildUrl instead */
     public function getImgixUrlByPreset(FileInterface $file, string $preset): ?string;
 
+    /** @deprecated without replacement */
     public function getImgixUrl(FileInterface $file, array $parameters): ?string;
-
-    public function getMappingTypes(): array;
 }

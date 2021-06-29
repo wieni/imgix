@@ -1,12 +1,68 @@
 <?php
 
+use Drupal\image\Entity\ImageStyle;
+use Drupal\imgix\ImgixImageStyleFactoryInterface;
+use Drupal\user\Entity\Role;
+
 /**
- * Add 'external_cdn' config option
+ * Implements @see hook_update_last_removed().
  */
-function imgix_update_8001()
+function imgix_update_last_removed(): int
 {
-    $config_factory = \Drupal::configFactory();
-    $config = $config_factory->getEditable('imgix.settings');
-    $config->set('external_cdn', '');
-    $config->save(true);
+    return 8001;
+}
+
+/**
+ * Replace 'administer imgix' permission with 'administer image styles'
+ */
+function imgix_update_8002(): void
+{
+    foreach (Role::loadMultiple() as $role) {
+        if (!$role->hasPermission('administer imgix')) {
+            continue;
+        }
+
+        $role->revokePermission('administer imgix');
+        $role->grantPermission('administer image styles');
+        $role->save();
+    }
+}
+
+/**
+ * Remove the 'mapping_url' option
+ */
+function imgix_update_8003(): void
+{
+    \Drupal::configFactory()
+        ->getEditable('imgix.settings')
+        ->clear('mapping_url')
+        ->save();
+}
+
+/**
+ * Convert Imgix presets to image styles
+ */
+function imgix_update_8004(): string
+{
+    /** @var ImgixImageStyleFactoryInterface $factory */
+    $factory = \Drupal::service('imgix.image_style_factory');
+    $config = \Drupal::configFactory()->getEditable('imgix.presets');
+    $count = 0;
+
+    foreach ($config->get('presets') ?? [] as $preset) {
+        if (ImageStyle::load($preset['key'])) {
+            continue;
+        }
+
+        parse_str($preset['query'], $parameters);
+        $imageStyle = $factory->getImageStyleByParameters($parameters);
+        $imageStyle->set('id', $preset['key']);
+        $imageStyle->set('name', $preset['key']);
+        $imageStyle->save();
+        $count++;
+    }
+
+    $config->delete();
+
+    return sprintf('Created %d image styles from Imgix presets.', $count);
 }

@@ -8,8 +8,11 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\imgix\ImgixManagerInterface;
+use Drupal\imgix\Plugin\ImageToolkit\ImgixToolkit;
 
 /**
+ * @deprecated Use the `image` field type from the `image` core module instead.
+ *
  * @FieldType(
  *     id = "imgix",
  *     label = @Translation("Imgix image"),
@@ -34,12 +37,12 @@ use Drupal\imgix\ImgixManagerInterface;
  *     constraints = {"ReferenceAccess" : {}, "FileValidation" : {}}
  * )
  */
-class ImgixFieldType extends FileItem
+class DoNotUseImgixFieldType extends FileItem
 {
     public static function defaultFieldSettings()
     {
         return [
-            'file_extensions' => ImgixManagerInterface::SUPPORTED_EXTENSIONS,
+            'file_extensions' => ImgixToolkit::getSupportedExtensions(),
             'description_field_required' => 0,
             'title_field' => 0,
             'title_field_required' => 0,
@@ -104,54 +107,23 @@ class ImgixFieldType extends FileItem
 
     public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data)
     {
-        $element = parent::storageSettingsForm($form, $form_state, $has_data);
+        $element = [];
 
-        unset($element['display_field']);
-        unset($element['display_default']);
+        $element['do_not_use'] = [
+            '#markup' => sprintf('<p>%s</p>', $this->t('This field type should not be used anymore. 
+                Please migrate this field to an Image field, see UPGRADING.md in the module folder for instructions.'))
+        ];
 
         return $element;
     }
 
     public function fieldSettingsForm(array $form, FormStateInterface $form_state)
     {
-        $element = parent::fieldSettingsForm($form, $form_state);
-        $settings = $this->getSettings();
+        $element = [];
 
-        if (isset($element['description_field'])) {
-            $element['description_field']['#title'] = $this->t('Enable <em>Caption</em> field');
-            $element['description_field']['#description'] = $this->t('The caption field allows users to enter a caption for the image.');
-
-            $element['description_field_required'] = [
-                '#type' => 'checkbox',
-                '#title' => $this->t('<em>Caption</em> field required'),
-                '#default_value' => $settings['description_field_required'],
-                '#weight' => $element['description_field']['#weight'],
-                '#states' => [
-                    'visible' => [
-                        ':input[name="settings[description_field]"]' => ['checked' => true],
-                    ],
-                ],
-            ];
-        }
-
-        $element['title_field'] = [
-            '#type' => 'checkbox',
-            '#title' => $this->t('Enable <em>Title</em> field'),
-            '#default_value' => $settings['title_field'],
-            '#description' => $this->t('The title attribute is used as a tooltip when the mouse hovers over the image. Enabling this field is not recommended as it can cause problems with screen readers.'),
-            '#weight' => 11,
-        ];
-
-        $element['title_field_required'] = [
-            '#type' => 'checkbox',
-            '#title' => $this->t('<em>Title</em> field required'),
-            '#default_value' => $settings['title_field_required'],
-            '#weight' => 12,
-            '#states' => [
-                'visible' => [
-                    ':input[name="settings[title_field]"]' => ['checked' => true],
-                ],
-            ],
+        $element['do_not_use'] = [
+            '#markup' => sprintf('<p>%s</p>', $this->t('This field type should not be used anymore. 
+                Please migrate this field to an Image field, see UPGRADING.md in the module folder for instructions.'))
         ];
 
         return $element;
