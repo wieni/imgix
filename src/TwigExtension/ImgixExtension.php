@@ -4,7 +4,7 @@ namespace Drupal\imgix\TwigExtension;
 
 use Drupal\file\FileInterface;
 use Drupal\imgix\ImgixManagerInterface;
-use Drupal\imgix\Plugin\Field\FieldType\ImgixFieldType;
+use Drupal\imgix\Plugin\Field\FieldType\DoNotUseImgixFieldType;
 
 class ImgixExtension extends \Twig_Extension
 {
@@ -37,7 +37,7 @@ class ImgixExtension extends \Twig_Extension
 
     public function imgix($file, $preset)
     {
-        if ($file instanceof ImgixFieldType) {
+        if ($file instanceof DoNotUseImgixFieldType) {
             $file = $file->getFile();
         }
 

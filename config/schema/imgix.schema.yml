@@ -6,41 +6,25 @@ imgix.settings:
       type: mapping
       mapping:
         source_domain:
-          label: 'Domain'
+          label: 'Source domain'
+          description: 'The Imgix domain from which your images are served. Usually, this is a subdomain of imgix.net.'
+          type: string
+        external_cdn:
+          label: 'External CDN'
+          description: 'The domain of an external CDN through which the images should be served, instead of the source domain.'
           type: string
         mapping_type:
-          label: 'Source type'
-          type: string
-        s3_has_prefix:
-          label: 'S3 bucket has prefix'
-          type: boolean
-        mapping_url:
-          label: 'Base URL'
+          label: 'Mapping type'
+          description: 'The way Imgix connects to your image storage.'
           type: string
         secure_url_token:
           label: 'Secure URL Token'
+          description: 'Signing URLs using a token prevents unauthorized parties from changing the parameters.'
           type: string
+        s3_has_prefix:
+          label: 'S3 bucket has prefix'
+          description: 'If this option is enabled, the first part of the image path will be removed. This can be useful in case your images are stored in a subfolder of the S3 bucket.'
+          type: boolean
         https:
           label: 'HTTPS support'
           type: boolean
-        external_cdn:
-          label: 'External CDN'
-          type: string
-
-imgix.presets:
-  type: config_object
-  label: 'Imgix presets'
-  mapping:
-    presets:
-      type: sequence
-      label: 'List of presets'
-      sequence:
-        type: mapping
-        label: 'Preset'
-        mapping:
-          key:
-            type: string
-            label: 'The actual key'
-          query:
-            type: text
-            label: 'The query string for this key'

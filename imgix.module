@@ -1,19 +1,20 @@
 <?php
 
-use Drupal\Core\Render\Element;
+use Drupal\imgix\Entity\ImgixImageStyle;
+use Drupal\imgix\Plugin\ImageEffect\ScaleAndCropImageEffect;
 
-function imgix_theme($existing, $type, $theme, $path)
+/**
+ * Implements @see hook_entity_type_alter().
+ */
+function imgix_entity_type_alter(array &$entity_types)
 {
-    return [
-        'imgix_image' => [
-            'template' => 'imgix-image',
-            'variables' => [
-                'preset' => null,
-                'url' => null,
-                'linkUrl' => null,
-                'title' => null,
-                'caption' => null,
-            ],
-        ],
-    ];
+    $entity_types['image_style']->setClass(ImgixImageStyle::class);
+}
+
+/**
+ * Implements @see hook_image_effect_info_alter().
+ */
+function imgix_image_effect_info_alter(array &$effects): void
+{
+    $effects['image_scale_and_crop']['class'] = ScaleAndCropImageEffect::class;
 }
