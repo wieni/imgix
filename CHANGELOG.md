@@ -4,14 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [9.0.0] - 2021-07-07
+Check [`UPGRADING.md`](UPGRADING.md) for instructions.
 
-## [9.0.0] - 2020-07-23
+### Added
+- Add `ImgixImageStyleFactoryInterface` to help with transitioning to image styles
+
 ### Removed
+- Remove Imgix presets in favour of core image styles
 - Remove field type, widget & formatter
 - Remove `imgix_image` theme hook
-- Remove Imgix presets in favour of core image styles
 - Remove the `administer imgix` permission
+- Remove the `mapping_url` setting
+- Remove `ImgixManagerInterface::getPresets`
+- Remove `ImgixManagerInterface::getMappingTypes`. Use `ImgixToolkitInterface::getMappingTypes` instead.
+- Remove `ImgixManager::SOURCE_S3`, `ImgixManager::SOURCE_FOLDER` & `ImgixManager::SOURCE_PROXY`. Use 
+  `ImgixToolkitInterface` constants instead.
+- Remove `ImgixManagerInterface::SUPPORTED_EXTENSIONS`. Use `ImgixToolkit::getSupportedExtensions` instead.
+- Remove _Imgix Browser_ submodule
 
 ## [8.6.1] - 2021-01-28
 ### Changed

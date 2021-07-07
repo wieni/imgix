@@ -5,6 +5,10 @@ complete list of changes including minor and patch releases, please
 refer to the [`CHANGELOG`](CHANGELOG.md).
 
 ## v9
+### Presets
+Presets functionality is removed in favour of core image styles. All existing presets are automatically converted to 
+image styles. You just have to add labels to the newly created image styles, since existing presets don't have labels.
+
 ### Field type, widget & formatter
 The `imgix` field type is removed. Use the `image` field type from the `image` core module instead. An example update 
 hook that can be used to migrate your fields can be found 
