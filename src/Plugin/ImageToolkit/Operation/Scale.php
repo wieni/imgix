@@ -43,16 +43,20 @@ class Scale extends Resize
             throw new \InvalidArgumentException("At least one dimension ('width' or 'height') must be provided to the image 'scale' operation");
         }
 
-        // Assure integers for all arguments.
-        $arguments['width'] = (int) round($arguments['width']);
-        $arguments['height'] = (int) round($arguments['height']);
+        if (!empty($arguments['width'])) {
+            $arguments['width'] = (int) round($arguments['width']);
 
-        // Fail when width or height are 0 or negative.
-        if ($arguments['width'] <= 0) {
-            throw new \InvalidArgumentException("Invalid width ('{$arguments['width']}') specified for the image 'scale' operation");
+            if ($arguments['width'] <= 0) {
+                throw new \InvalidArgumentException(sprintf("Invalid width ('%s') specified for the image 'scale' operation", $arguments['width']));
+            }
         }
-        if ($arguments['height'] <= 0) {
-            throw new \InvalidArgumentException("Invalid height ('{$arguments['height']}') specified for the image 'scale' operation");
+
+        if (!empty($arguments['height'])) {
+            $arguments['height'] = (int) round($arguments['height']);
+
+            if ($arguments['height'] <= 0) {
+                throw new \InvalidArgumentException(sprintf("Invalid height ('%s') specified for the image 'scale' operation", $arguments['height']));
+            }
         }
 
         return $arguments;
@@ -60,10 +64,16 @@ class Scale extends Resize
 
     protected function execute(array $arguments = []): bool
     {
-        $this->getToolkit()
-            ->setParameter('fit', $arguments['upscale'] ? 'clip' : 'max')
-            ->setParameter('w', $arguments['width'])
-            ->setParameter('h', $arguments['height']);
+        $toolkit = $this->getToolkit();
+        $toolkit->setParameter('fit', $arguments['upscale'] ? 'clip' : 'max');
+
+        if (isset($arguments['width'])) {
+            $toolkit->setParameter('w', $arguments['width']);
+        }
+
+        if (isset($arguments['height'])) {
+            $toolkit->setParameter('h', $arguments['height']);
+        }
 
         return true;
     }

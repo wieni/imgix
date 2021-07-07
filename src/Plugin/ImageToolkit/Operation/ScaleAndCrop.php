@@ -28,6 +28,8 @@ class ScaleAndCrop extends Resize
             ],
             'anchor' => [
                 'description' => 'The part of the image that will be retained during the crop',
+                'required' => false,
+                'default' => false,
             ],
             'upscale' => [
                 'description' => 'Boolean indicating that files smaller than the dimensions will be scaled up. This generally results in a low quality image',
@@ -65,11 +67,20 @@ class ScaleAndCrop extends Resize
 
     protected function execute(array $arguments = []): bool
     {
-        $this->getToolkit()
-            ->setParameter('fit', $arguments['upscale'] ? 'crop' : 'min')
-            ->setParameter('w', $arguments['width'])
-            ->setParameter('h', $arguments['height'])
-            ->setParameter('crop', str_replace('-', ',', $arguments['anchor']));
+        $toolkit = $this->getToolkit();
+        $toolkit->setParameter('fit', $arguments['upscale'] ? 'crop' : 'min');
+
+        if (isset($arguments['width'])) {
+            $toolkit->setParameter('w', $arguments['width']);
+        }
+
+        if (isset($arguments['height'])) {
+            $toolkit->setParameter('h', $arguments['height']);
+        }
+
+        if (isset($arguments['anchor'])) {
+            $toolkit->setParameter('crop', str_replace('-', ',', $arguments['anchor']));
+        }
 
         return true;
     }
