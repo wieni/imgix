@@ -32,32 +32,22 @@ class ImgixImageStyle extends ImageStyle
             return null;
         }
 
-        $parts = parse_url($uri);
-        $path = sprintf('/%s%s', $parts['host'], $parts['path']);
-        $buildUrl = null;
+        $parts = parse_url(file_create_url($uri));
+        $prefix = $toolkit->getPathPrefix();
+        $path = $parts['path'];
 
-        switch ($toolkit->getMappingType()) {
-            case ImgixToolkitInterface::SOURCE_FOLDER:
-                // We need the full path after the domain.
-                $buildUrl = $parts['path'];
-                break;
-            case ImgixToolkitInterface::SOURCE_PROXY:
-                // We just need the full path.
-                $buildUrl = $path;
-                break;
-            case ImgixToolkitInterface::SOURCE_S3:
-                $buildUrl = explode('/', $path);
-                array_shift($buildUrl); // The "/"
-
-                if (!$toolkit->hasS3Prefix()) {
-                    array_shift($buildUrl); // The bucket.
-                }
-
-                $buildUrl = implode('/', $buildUrl);
-                break;
+        if ($prefix && substr($path, 0, strlen($prefix)) === $prefix) {
+            $path = substr($path, strlen($prefix));
         }
 
-        if (!$buildUrl) {
+        if ($toolkit->getMappingType() === ImgixToolkitInterface::SOURCE_S3 && !$toolkit->hasS3Prefix()) {
+            $path = explode('/', $path);
+            array_shift($path); // The "/"
+            array_shift($path); // The bucket.
+            $path = implode('/', $path);
+        }
+
+        if (!$path) {
             return null;
         }
 
@@ -76,7 +66,7 @@ class ImgixImageStyle extends ImageStyle
         }
 
         $url = $builder->createURL(
-            $buildUrl,
+            $path,
             $toolkit->getParameters()
         );
 

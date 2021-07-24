@@ -3,4 +3,5 @@ external_cdn: ''
 mapping_type: 'webfolder'
 secure_url_token: ''
 s3_has_prefix: 0
+path_prefix: ''
 https: 1

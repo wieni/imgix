@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.1.0] - 2021-07-24
+Check [`UPGRADING.md`](UPGRADING.md) for instructions.
+
+### Added
+- Add the _Path prefix_ option
+- Add support for Google Cloud Storage sources
+
+### Changed
+- Deprecated the _S3 bucket has prefix_ option. Use the new _Path prefix_ option instead.
+
 ## [9.0.0] - 2021-07-07
 Check [`UPGRADING.md`](UPGRADING.md) for instructions.
 

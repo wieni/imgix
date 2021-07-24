@@ -4,7 +4,12 @@ This document describes breaking changes and how to upgrade. For a
 complete list of changes including minor and patch releases, please
 refer to the [`CHANGELOG`](CHANGELOG.md).
 
-## v9
+## 9.1.0
+The _S3 bucket has prefix_ option is deprecated. The new _Path prefix_ option should be used instead. The difference is 
+that when the first option has a _truthy_ value, the first part of the path is removed. With the new option, you have to
+define the string prefix that should be removed. This allows you to strip multiple parts of the path if needed.
+
+## 9.0.0
 ### Presets
 Presets functionality is removed in favour of core image styles. All existing presets are automatically converted to 
 image styles. You just have to add labels to the newly created image styles, since existing presets don't have labels.

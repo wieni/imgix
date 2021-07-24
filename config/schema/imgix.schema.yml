@@ -25,6 +25,10 @@ imgix.settings:
           label: 'S3 bucket has prefix'
           description: 'If this option is enabled, the first part of the image path will be removed. This can be useful in case your images are stored in a subfolder of the S3 bucket.'
           type: boolean
+        path_prefix:
+          label: 'Path prefix'
+          description: 'A path prefix that should be removed from the image path. When using a GCS or S3 source, this should be the bucket name. This can also be useful in case your images are stored in a subfolder.'
+          type: boolean
         https:
           label: 'HTTPS support'
           type: boolean

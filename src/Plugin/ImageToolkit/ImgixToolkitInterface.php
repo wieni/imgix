@@ -7,6 +7,7 @@ use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 interface ImgixToolkitInterface extends ImageToolkitInterface
 {
     public const SOURCE_S3 = 's3';
+    public const SOURCE_GCS = 'gcs';
     public const SOURCE_FOLDER = 'webfolder';
     public const SOURCE_PROXY = 'webproxy';
 
@@ -28,7 +29,10 @@ interface ImgixToolkitInterface extends ImageToolkitInterface
 
     public function getMappingTypes(): array;
 
+    /** @deprecated use getPathPrefix instead. */
     public function hasS3Prefix(): bool;
+
+    public function getPathPrefix(): ?string;
 
     public function usesHttps(): bool;
 

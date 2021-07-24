@@ -157,6 +157,7 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
             static::SOURCE_FOLDER => 'Web Folder',
             static::SOURCE_PROXY => 'Web Proxy',
             static::SOURCE_S3 => 'Amazon S3',
+            static::SOURCE_GCS => 'Google Cloud Storage',
         ];
     }
 
@@ -165,6 +166,13 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
         return (bool) $this->configFactory
             ->get('imgix.settings')
             ->get('s3_has_prefix');
+    }
+
+    public function getPathPrefix(): ?string
+    {
+        return $this->configFactory
+            ->get('imgix.settings')
+            ->get('path_prefix');
     }
 
     public function usesHttps(): bool
@@ -217,20 +225,15 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
         ];
 
         $form['mapping_type'][static::SOURCE_S3]['#description'] = $this->t("An Amazon S3 Source connects to an existing Amazon S3 bucket. imgix connects using the credentials you supply, so images don't have to be public.");
+        $form['mapping_type'][static::SOURCE_GCS]['#description'] = $this->t("A Google Cloud Storage Source connects to an existing Google Cloud Storage bucket. imgix connects using the credentials you supply, so images don't have to be public.");
         $form['mapping_type'][static::SOURCE_FOLDER]['#description'] = $this->t('A Web Folder Source connects to your existing folder of images that are on a publicly addressable website, usually your website’s existing image folder.');
         $form['mapping_type'][static::SOURCE_PROXY]['#description'] = $this->t('A Web Proxy Source allows you to connect to any image that is addressable through a publicly-available URL. You provide the entire image URL of the master image in the path of the imgix request.');
 
-        $form['s3_has_prefix'] = [
-            '#type' => 'checkbox',
-            '#title' => $this->t('S3 bucket has prefix'),
-            '#description' => $this->t('If this option is enabled, the first part of the image path will be removed. This can be useful in case your images are stored in a subfolder of the S3 bucket.'),
-            '#default_value' => $config->get('s3_has_prefix'),
-        ];
-
-        $form['s3_has_prefix']['#states'] = [
-            'visible' => [
-                'input[name="mapping_type"]' => ['value' => static::SOURCE_S3],
-            ],
+        $form['path_prefix'] = [
+            '#type' => 'textfield',
+            '#title' => $this->t('Path prefix'),
+            '#description' => $this->t('A path prefix that should be removed from the image path. When using a GCS or S3 source, this should be the bucket name. This can also be useful in case your images are stored in a subfolder.'),
+            '#default_value' => $config->get('path_prefix'),
         ];
 
         $form['https'] = [
@@ -284,6 +287,10 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
         }
 
         if ($mappingType === static::SOURCE_S3 && $urlScheme !== 's3') {
+            return true;
+        }
+
+        if ($mappingType === static::SOURCE_GCS && $urlScheme !== 'gcs') {
             return true;
         }
 
