@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Check existence of plugin definitions before overriding
+- Fix config schema
 
 ## [9.1.0] - 2021-07-24
 Check [`UPGRADING.md`](UPGRADING.md) for instructions.

@@ -28,7 +28,7 @@ imgix.settings:
         path_prefix:
           label: 'Path prefix'
           description: 'A path prefix that should be removed from the image path. When using a GCS or S3 source, this should be the bucket name. This can also be useful in case your images are stored in a subfolder.'
-          type: boolean
+          type: string
         https:
           label: 'HTTPS support'
           type: boolean
