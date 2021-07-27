@@ -49,6 +49,11 @@ function imgix_update_8004(): string
     $config = \Drupal::configFactory()->getEditable('imgix.presets');
     $count = 0;
 
+    // Install the new image module dependency if not yet installed
+    \Drupal::getContainer()
+        ->get('module_installer')
+        ->install(['image']);
+
     foreach ($config->get('presets') ?? [] as $preset) {
         if (ImageStyle::load($preset['key'])) {
             continue;
