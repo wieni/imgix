@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
@@ -155,6 +157,66 @@ function imgix_update_8005(): void
                 );
                 $database->query($query, [':values[]' => array_values($row)]);
             }
+        }
+    }
+}
+
+/**
+ * Migrate field widgets from imgix to image
+ */
+function imgix_update_8006(): void
+{
+    foreach (EntityFormDisplay::loadMultiple() as $formDisplay) {
+        $changed = false;
+
+        foreach ($formDisplay->getComponents() as $fieldName => $component) {
+            if ($component['type'] !== 'imgix') {
+                continue;
+            }
+
+            $component['type'] = 'image_image';
+
+            if (isset($component['preview_preset'])) {
+                $component['preview_image_style'] = $component['preview_preset'];
+                unset($component['preview_preset']);
+            }
+
+            $formDisplay->setComponent($fieldName, $component);
+            $changed = true;
+        }
+
+        if ($changed) {
+            $formDisplay->save();
+        }
+    }
+}
+
+/**
+ * Migrate field formatters from imgix to image
+ */
+function imgix_update_8007(): void
+{
+    foreach (EntityViewDisplay::loadMultiple() as $viewDisplay) {
+        $changed = false;
+
+        foreach ($viewDisplay->getComponents() as $fieldName => $component) {
+            if ($component['type'] !== 'imgix_formatter') {
+                continue;
+            }
+
+            $component['type'] = 'image';
+
+            if (isset($component['image_preset'])) {
+                $component['image_style'] = $component['image_preset'];
+                unset($component['image_preset']);
+            }
+
+            $viewDisplay->setComponent($fieldName, $component);
+            $changed = true;
+        }
+
+        if ($changed) {
+            $viewDisplay->save();
         }
     }
 }
