@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\imgix\ImgixImageStyleFactoryInterface;
 use Drupal\user\Entity\Role;
@@ -70,4 +72,89 @@ function imgix_update_8004(): string
     $config->delete();
 
     return sprintf('Created %d image styles from Imgix presets.', $count);
+}
+
+/**
+ * Migrate fields from imgix to image field types
+ */
+function imgix_update_8005(): void
+{
+    $database = \Drupal::database();
+    $fieldStorageStorage = \Drupal::entityTypeManager()
+        ->getStorage('field_storage_config');
+
+    $fieldStorageConfigNames = $fieldStorageStorage->getQuery()
+        ->condition('type', 'imgix')
+        ->execute();
+
+    /** @var FieldStorageConfig $fieldStorage */
+    foreach ($fieldStorageStorage->loadMultiple($fieldStorageConfigNames) as $fieldStorage) {
+        $entityTypeId = $fieldStorage->getTargetEntityTypeId();
+        $fieldName = $fieldStorage->getName();
+        $newFieldType = 'image';
+
+        $table = $entityTypeId . '__' . $fieldName;
+        $currentRows = null;
+        $newFieldsList = [];
+        $fieldStorage = FieldStorageConfig::loadByName($entityTypeId, $fieldName);
+
+        if (is_null($fieldStorage)) {
+            return;
+        }
+
+        // Get all current data from DB.
+        if ($database->schema()->tableExists($table)) {
+            // The table data to restore after the update is completed.
+            $currentRows = $database->select($table, 'n')
+                ->fields('n')
+                ->execute()
+                ->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        // Map description to alt field
+        foreach ($currentRows as &$row) {
+            $row[$fieldName . '_alt'] = $row[$fieldName . '_description'];
+            unset($row[$fieldName . '_description']);
+        }
+
+        // Use existing field config for new field.
+        foreach ($fieldStorage->getBundles() as $bundle => $label) {
+            $field = FieldConfig::loadByName($entityTypeId, $bundle, $fieldName);
+            $newField = $field->toArray();
+            $newField['field_type'] = $newFieldType;
+            $newFieldsList[] = $newField;
+        }
+
+        // Deleting field storage which will also delete bundles(fields).
+        $newFieldStorage = $fieldStorage->toArray();
+        $newFieldStorage['type'] = $newFieldType;
+
+        $fieldStorage->delete();
+
+        // Purge field data now to allow new field and field_storage with same name
+        // to be created.
+        field_purge_batch(40);
+
+        // Create new field storage.
+        $newFieldStorage = FieldStorageConfig::create($newFieldStorage);
+        $newFieldStorage->save();
+
+        // Create new fields.
+        foreach ($newFieldsList as $nfield) {
+            $nfieldConfig = FieldConfig::create($nfield);
+            $nfieldConfig->save();
+        }
+
+        // Restore existing data in new table.
+        if (!is_null($currentRows)) {
+            foreach ($currentRows as $row) {
+                $query = sprintf(
+                    'INSERT IGNORE INTO {%s} (%s) VALUES (:values[])',
+                    $table,
+                    implode(', ', array_keys($row))
+                );
+                $database->query($query, [':values[]' => array_values($row)]);
+            }
+        }
+    }
 }
