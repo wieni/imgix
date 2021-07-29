@@ -2,13 +2,22 @@
 
 use Drupal\imgix\Entity\ImgixImageStyle;
 use Drupal\imgix\Plugin\ImageEffect\ScaleAndCropImageEffect;
+use Drupal\wmimages\Entity\WieniImagesImageStyle;
 
 /**
  * Implements @see hook_entity_type_alter().
  */
 function imgix_entity_type_alter(array &$entity_types)
 {
-    if (isset($entity_types['image_style'])) {
+    if (!\Drupal::moduleHandler()->moduleExists('image')) {
+        return;
+    }
+
+    $toolkitId = \Drupal::getContainer()
+        ->get('image.toolkit.manager')
+        ->getDefaultToolkitId();
+
+    if ($toolkitId === 'imgix') {
         $entity_types['image_style']->setClass(ImgixImageStyle::class);
     }
 }
