@@ -220,3 +220,14 @@ function imgix_update_8007(): void
         }
     }
 }
+
+/**
+ * Activate the imgix image toolkit
+ */
+function imgix_update_8008(): void
+{
+    \Drupal::configFactory()
+        ->getEditable('system.image')
+        ->set('toolkit', 'imgix')
+        ->save();
+}
