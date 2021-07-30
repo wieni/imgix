@@ -3,6 +3,7 @@
 namespace Drupal\imgix\TwigExtension;
 
 use Drupal\file\FileInterface;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\imgix\ImgixManagerInterface;
 use Drupal\imgix\Plugin\Field\FieldType\DoNotUseImgixFieldType;
 
@@ -39,6 +40,10 @@ class ImgixExtension extends \Twig_Extension
     {
         if ($file instanceof DoNotUseImgixFieldType) {
             $file = $file->getFile();
+        }
+
+        if ($file instanceof ImageItem) {
+            $file = $file->get('entity')->getValue();
         }
 
         if (!$file instanceof FileInterface) {

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.1.8] - 2021-07-30
+### Fixed
+- Allow `ImageItem` instances to be passed to the Twig extension
+  
 ## [9.1.7] - 2021-07-30
 ### Removed
 - Remove the `s3_has_prefix` option. Since we're now using `file_create_url`, the bucket is automatically stripped from
