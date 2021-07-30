@@ -161,13 +161,6 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
         ];
     }
 
-    public function hasS3Prefix(): bool
-    {
-        return (bool) $this->configFactory
-            ->get('imgix.settings')
-            ->get('s3_has_prefix');
-    }
-
     public function getPathPrefix(): ?string
     {
         return $this->configFactory

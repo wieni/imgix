@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.1.7] - 2021-07-30
+### Removed
+- Remove the `s3_has_prefix` option. Since we're now using `file_create_url`, the bucket is automatically stripped from
+  the path.
+
 ## [9.1.6] - 2021-07-30
 ### Fixed
 - Automatically activate the image toolkit
@@ -53,7 +58,7 @@ Check [`UPGRADING.md`](UPGRADING.md) for instructions.
 - Remove the `mapping_url` setting
 - Remove `ImgixManagerInterface::getPresets`
 - Remove `ImgixManagerInterface::getMappingTypes`. Use `ImgixToolkitInterface::getMappingTypes` instead.
-- Remove `ImgixManager::SOURCE_S3`, `ImgixManager::SOURCE_FOLDER` & `ImgixManager::SOURCE_PROXY`. Use 
+- Remove `ImgixManager::SOURCE_S3`, `ImgixManager::SOURCE_FOLDER` & `ImgixManager::SOURCE_PROXY`. Use
   `ImgixToolkitInterface` constants instead.
 - Remove `ImgixManagerInterface::SUPPORTED_EXTENSIONS`. Use `ImgixToolkit::getSupportedExtensions` instead.
 - Remove _Imgix Browser_ submodule

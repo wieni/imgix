@@ -40,13 +40,6 @@ class ImgixImageStyle extends ImageStyle
             $path = substr($path, strlen($prefix));
         }
 
-        if ($toolkit->getMappingType() === ImgixToolkitInterface::SOURCE_S3 && !$toolkit->hasS3Prefix()) {
-            $path = explode('/', $path);
-            array_shift($path); // The "/"
-            array_shift($path); // The bucket.
-            $path = implode('/', $path);
-        }
-
         if (!$path) {
             return null;
         }

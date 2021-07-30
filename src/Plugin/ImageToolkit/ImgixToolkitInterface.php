@@ -29,9 +29,6 @@ interface ImgixToolkitInterface extends ImageToolkitInterface
 
     public function getMappingTypes(): array;
 
-    /** @deprecated use getPathPrefix instead. */
-    public function hasS3Prefix(): bool;
-
     public function getPathPrefix(): ?string;
 
     public function usesHttps(): bool;

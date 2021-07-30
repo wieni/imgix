@@ -231,3 +231,14 @@ function imgix_update_8008(): void
         ->set('toolkit', 'imgix')
         ->save();
 }
+
+/**
+ * Remove the 's3_has_prefix' option
+ */
+function imgix_update_8009(): void
+{
+    \Drupal::configFactory()
+        ->getEditable('imgix.settings')
+        ->clear('s3_has_prefix')
+        ->save();
+}
