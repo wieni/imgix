@@ -27,7 +27,15 @@ function imgix_entity_type_alter(array &$entity_types)
  */
 function imgix_image_effect_info_alter(array &$effects): void
 {
-    if (isset($effects['image_scale_and_crop'])) {
+    if (!\Drupal::moduleHandler()->moduleExists('image')) {
+        return;
+    }
+
+    $toolkitId = \Drupal::getContainer()
+        ->get('image.toolkit.manager')
+        ->getDefaultToolkitId();
+
+    if ($toolkitId === 'imgix') {
         $effects['image_scale_and_crop']['class'] = ScaleAndCropImageEffect::class;
     }
 }

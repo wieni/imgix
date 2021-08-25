@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [9.1.9] - 2021-08-25
 ### Fixed
 - Add weights to image effects in `ImgixImageStyleFactory`
+- Only override image scale and crop effect class if toolkit is enabled
 
 ## [9.1.8] - 2021-07-30
 ### Fixed
