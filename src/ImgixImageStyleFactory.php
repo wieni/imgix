@@ -137,6 +137,15 @@ class ImgixImageStyleFactory implements ImgixImageStyleFactoryInterface
             ]);
         }
 
+        // Set weights
+        $effects = $imageStyle->getEffects();
+        $weight = -10;
+
+        foreach ($effects as $effect) {
+            $effect->setWeight($weight);
+            $weight++;
+        }
+
         return $imageStyle;
     }
 }
