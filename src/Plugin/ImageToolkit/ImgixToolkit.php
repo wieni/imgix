@@ -17,9 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
 {
+    /** @var int */
+    protected $width;
+    /** @var int */
+    protected $height;
+
     /** @var ImageToolkitManager */
     protected $imageToolkitManager;
-
     /** @var array */
     protected $params = [];
     /** @var ImageToolkitInterface */
@@ -76,7 +80,13 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
             return $this->getFallbackToolkit()->getWidth();
         }
 
-        return null;
+        if (isset($this->width)) {
+            return $this->width;
+        }
+
+        $this->loadInfo();
+
+        return $this->width;
     }
 
     public function getHeight(): ?int
@@ -85,7 +95,13 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
             return $this->getFallbackToolkit()->getHeight();
         }
 
-        return null;
+        if (isset($this->height)) {
+            return $this->height;
+        }
+
+        $this->loadInfo();
+
+        return $this->height;
     }
 
     public function getMimeType(): ?string
@@ -315,5 +331,57 @@ class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface
         return $this->fallbackToolkit = $this->imageToolkitManager
             ->createInstance('gd')
             ->setSource($this->getSource());
+    }
+
+    protected function loadInfo(): void
+    {
+        [$this->width, $this->height] = $this->getImageDimensions($this->getSource());
+    }
+
+    protected function getImageDimensions(string $source): ?array
+    {
+        $urlParts = parse_url($source);
+        $pathParts = pathinfo($urlParts['path'] ?? '');
+
+        if (isset($pathParts['extension']) && $pathParts['extension'] === 'svg') {
+            return $this->getSvgImageDimensions($source);
+        }
+
+        $size = @getimagesize($this->getSource());
+        if (!isset($size[0], $size[1])) {
+            return null;
+        }
+
+        return [$size[0], $size[1]];
+    }
+
+    protected function getSvgImageDimensions(string $source): ?array
+    {
+        if (!$fileContents = file_get_contents($source)) {
+            return null;
+        }
+
+        $svg = simplexml_load_string($fileContents);
+        $attributes = iterator_to_array($svg->attributes());
+
+        if (isset($attributes['width'], $attributes['height'])) {
+            return [(int) $attributes['width'], (int) $attributes['height']];
+        }
+
+        if (isset($attributes['viewBox'])) {
+            $viewBox = $attributes['viewBox'];
+        } elseif (isset($attributes['viewbox'])) {
+            $viewBox = $attributes['viewbox'];
+        }
+
+        if (isset($viewBox)) {
+            $viewBoxParts = explode(' ', $viewBox);
+
+            if (isset($viewBoxParts[2], $viewBoxParts[3])) {
+                return [(int) $viewBoxParts[2], (int) $viewBoxParts[3]];
+            }
+        }
+
+        return [64, 64];
     }
 }
