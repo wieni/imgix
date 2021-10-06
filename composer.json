@@ -12,7 +12,7 @@
     "require": {
         "php": ">=7.1.0",
         "drupal/core": "^8.7.7 || ^9",
-        "imgix/imgix-php": "1.1.0"
+        "imgix/imgix-php": "^1.0 || ^2.0 || ^3.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.0",
