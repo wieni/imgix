@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### Changed
+- Add upgrade docs for when you're coming from the Drupal.org version of the module.
+
 ## [9.1.11] - 2021-09-29
 ### Fixed
 - Add back support for getting width and height from an image
