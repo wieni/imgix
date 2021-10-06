@@ -170,7 +170,7 @@ function imgix_update_8006(): void
         $changed = false;
 
         foreach ($formDisplay->getComponents() as $fieldName => $component) {
-            if ($component['type'] !== 'imgix') {
+            if (!isset($component['type']) || $component['type'] !== 'imgix') {
                 continue;
             }
 
@@ -200,7 +200,7 @@ function imgix_update_8007(): void
         $changed = false;
 
         foreach ($viewDisplay->getComponents() as $fieldName => $component) {
-            if ($component['type'] !== 'imgix_formatter') {
+            if (!isset($component['type']) || $component['type'] !== 'imgix_formatter') {
                 continue;
             }
 
