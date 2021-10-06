@@ -34,7 +34,7 @@ class ImgixImageStyle extends ImageStyle
 
         $parts = parse_url(file_create_url($uri));
         $prefix = $toolkit->getPathPrefix();
-        $path = $parts['path'];
+        $path = urldecode($parts['path']);
 
         if ($prefix && substr($path, 0, strlen($prefix)) === $prefix) {
             $path = substr($path, strlen($prefix));
