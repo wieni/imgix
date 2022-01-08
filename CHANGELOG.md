@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Remove deprecated code
+- Remove the Twig extension. You can use the [`image_utilities` module](https://www.drupal.org/project/image_utilities) 
+  for a more generic replacement to this extension.
 
 ## [9.1.11] - 2021-09-29
 ### Fixed

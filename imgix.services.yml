@@ -9,11 +9,5 @@ services:
         arguments:
             - '@imgix.image_style_factory'
 
-    imgix.twig_extension:
-        class: Drupal\imgix\TwigExtension\ImgixExtension
-        arguments: ['@imgix.manager']
-        tags:
-            - { name: twig.extension }
-
     imgix.image_style_factory:
         class: Drupal\imgix\ImgixImageStyleFactory
