@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [10.0.0] - 2022-01-08
 ### Changed
-- Add upgrade docs for when you're coming from the Drupal.org version of the module.
 - Broaden the imgix/imgix-php version requirement
 - Add Composer 2 dev requirement
 - Increase minimum PHP version to 7.4
@@ -16,8 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Remove deprecated code
-- Remove the Twig extension. You can use the [`image_utilities` module](https://www.drupal.org/project/image_utilities) 
-  for a more generic replacement to this extension.
+- Remove the Twig extension
 
 ## [9.1.11] - 2021-09-29
 ### Fixed
