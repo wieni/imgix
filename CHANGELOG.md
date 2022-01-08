@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix _Undefined array key "type" in imgix_update_8006/imgix_update_8007_.
 
+### Removed
+- Remove deprecated code
+
 ## [9.1.11] - 2021-09-29
 ### Fixed
 - Add back support for getting width and height from an image
