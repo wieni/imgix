@@ -16,7 +16,7 @@ Imgix
 
 ## Installation
 
-This package requires PHP 7.1 and Drupal 8.7 or higher. It can be
+This package requires PHP 7.4 and Drupal 8.8.4 or higher. It can be
 installed using Composer:
 
 ```bash
