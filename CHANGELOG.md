@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add upgrade docs for when you're coming from the Drupal.org version of the module.
 - Broaden the imgix/imgix-php version requirement
 - Add Composer 2 dev requirement
+- Increase minimum PHP version to 7.4
 
 ### Fixed
 - Fix _Undefined array key "type" in imgix_update_8006/imgix_update_8007_.
