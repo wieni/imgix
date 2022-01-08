@@ -6,11 +6,11 @@ namespace Drupal\imgix\Plugin\ImageToolkit\Operation;
  * https://docs.imgix.com/apis/rendering/size/fit#scale
  *
  * @ImageToolkitOperation(
- *   id = "imgix_scale",
- *   toolkit = "imgix",
- *   operation = "scale",
- *   label = @Translation("Scale"),
- *   description = @Translation("Scales an image while maintaining aspect ratio. The resulting image can be smaller for one or both target dimensions.")
+ *     id = "imgix_scale",
+ *     toolkit = "imgix",
+ *     operation = "scale",
+ *     label = @Translation("Scale"),
+ *     description = @Translation("Scales an image while maintaining aspect ratio. The resulting image can be smaller for one or both target dimensions.")
  * )
  */
 class Scale extends Resize

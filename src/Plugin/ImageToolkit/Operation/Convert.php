@@ -6,11 +6,11 @@ namespace Drupal\imgix\Plugin\ImageToolkit\Operation;
  * @see https://docs.imgix.com/apis/rendering/format/fm
  *
  * @ImageToolkitOperation(
- *   id = "imgix_convert",
- *   toolkit = "imgix",
- *   operation = "convert",
- *   label = @Translation("Convert"),
- *   description = @Translation("Instructs the toolkit to save the image with a specified extension.")
+ *     id = "imgix_convert",
+ *     toolkit = "imgix",
+ *     operation = "convert",
+ *     label = @Translation("Convert"),
+ *     description = @Translation("Instructs the toolkit to save the image with a specified extension.")
  * )
  */
 class Convert extends ImgixImageToolkitOperationBase
@@ -29,7 +29,7 @@ class Convert extends ImgixImageToolkitOperationBase
         $supportedExtensions = $this->getToolkit()->getSupportedExtensions();
 
         if (!in_array($arguments['extension'], $supportedExtensions, true)) {
-            throw new \InvalidArgumentException("Invalid extension ({$arguments['extension']}) specified for the image 'convert' operation");
+            throw new \InvalidArgumentException(sprintf('Invalid extension (%s) specified for the image \'convert\' operation', $arguments['extension']));
         }
 
         return $arguments;

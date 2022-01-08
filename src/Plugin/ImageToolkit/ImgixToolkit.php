@@ -11,8 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @ImageToolkit(
- *   id = "imgix",
- *   title = @Translation("Imgix toolkit")
+ *     id = "imgix",
+ *     title = @Translation("Imgix toolkit")
  * )
  */
 class ImgixToolkit extends ImageToolkitBase implements ImgixToolkitInterface

@@ -6,11 +6,11 @@ namespace Drupal\imgix\Plugin\ImageToolkit\Operation;
  * @see https://docs.imgix.com/apis/rendering/adjustment/sat
  *
  * @ImageToolkitOperation(
- *   id = "imgix_desaturate",
- *   toolkit = "imgix",
- *   operation = "desaturate",
- *   label = @Translation("Desaturate"),
- *   description = @Translation("Converts an image to grayscale.")
+ *     id = "imgix_desaturate",
+ *     toolkit = "imgix",
+ *     operation = "desaturate",
+ *     label = @Translation("Desaturate"),
+ *     description = @Translation("Converts an image to grayscale.")
  * )
  */
 class Desaturate extends ImgixImageToolkitOperationBase

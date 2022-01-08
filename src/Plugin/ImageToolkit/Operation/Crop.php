@@ -6,11 +6,11 @@ namespace Drupal\imgix\Plugin\ImageToolkit\Operation;
  * @see https://docs.imgix.com/apis/rendering/size/crop
  *
  * @ImageToolkitOperation(
- *   id = "imgix_crop",
- *   toolkit = "imgix",
- *   operation = "crop",
- *   label = @Translation("Crop"),
- *   description = @Translation("Crops an image to a rectangle specified by the given dimensions.")
+ *     id = "imgix_crop",
+ *     toolkit = "imgix",
+ *     operation = "crop",
+ *     label = @Translation("Crop"),
+ *     description = @Translation("Crops an image to a rectangle specified by the given dimensions.")
  * )
  */
 class Crop extends ImgixImageToolkitOperationBase
@@ -51,10 +51,10 @@ class Crop extends ImgixImageToolkitOperationBase
 
         // Fail when width or height are 0 or negative.
         if ($arguments['width'] <= 0) {
-            throw new \InvalidArgumentException("Invalid width ('{$arguments['width']}') specified for the image 'crop' operation");
+            throw new \InvalidArgumentException(sprintf('Invalid width (\'%s\') specified for the image \'crop\' operation', $arguments['width']));
         }
         if ($arguments['height'] <= 0) {
-            throw new \InvalidArgumentException("Invalid height ('{$arguments['height']}') specified for the image 'crop' operation");
+            throw new \InvalidArgumentException(sprintf('Invalid height (\'%s\') specified for the image \'crop\' operation', $arguments['height']));
         }
 
         return $arguments;

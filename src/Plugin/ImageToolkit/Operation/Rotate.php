@@ -9,11 +9,11 @@ use Drupal\Component\Utility\Color;
  * @see https://docs.imgix.com/apis/rendering/rotation/rot
  *
  * @ImageToolkitOperation(
- *   id = "imgix_rotate",
- *   toolkit = "imgix",
- *   operation = "rotate",
- *   label = @Translation("Rotate"),
- *   description = @Translation("Rotates an image by the given number of degrees.")
+ *     id = "imgix_rotate",
+ *     toolkit = "imgix",
+ *     operation = "rotate",
+ *     label = @Translation("Rotate"),
+ *     description = @Translation("Rotates an image by the given number of degrees.")
  * )
  */
 class Rotate extends ImgixImageToolkitOperationBase
@@ -26,8 +26,8 @@ class Rotate extends ImgixImageToolkitOperationBase
             ],
             'background' => [
                 'description' => "A string specifying the hexadecimal color code to use as background for the uncovered area of the image after the rotation. E.g. '#000000' for black, '#ff00ff' for magenta, and '#ffffff' for white. For images that support transparency, this will default to transparent white",
-                'required' => FALSE,
-                'default' => NULL,
+                'required' => false,
+                'default' => null,
             ],
         ];
     }

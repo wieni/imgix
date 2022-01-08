@@ -1,8 +1,8 @@
 {
     "name": "wieni/imgix",
-    "type": "drupal-module",
     "description": "Render Drupal 8 images through Imgix, a real-time image processing service and CDN",
     "license": "MIT",
+    "type": "drupal-module",
     "authors": [
         {
             "name": "Wieni",
@@ -21,6 +21,11 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
+    },
     "scripts": {
         "coding-standards": [
             "@composer normalize",
@@ -28,10 +33,5 @@
             "php-cs-fixer fix --config=.php_cs.php",
             "phpstan analyse"
         ]
-    },
-    "config": {
-        "allow-plugins": {
-            "ergebnis/composer-normalize": true
-        }
     }
 }

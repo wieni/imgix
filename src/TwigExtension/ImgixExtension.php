@@ -18,26 +18,26 @@ class ImgixExtension extends \Twig_Extension
         $this->imgixManager = $imgixManager;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'imgix' => new \Twig_SimpleFilter('imgix', [$this, 'imgix']),
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             'imgix' => new \Twig_SimpleFunction('imgix', [$this, 'imgix']),
         ];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'imgix.twig_extension';
     }
 
-    public function imgix($file, $preset)
+    public function imgix($file, $preset): ?string
     {
         if ($file instanceof EntityReferenceItem) {
             $file = $file->get('entity')->getValue();

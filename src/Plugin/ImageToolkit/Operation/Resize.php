@@ -6,11 +6,11 @@ namespace Drupal\imgix\Plugin\ImageToolkit\Operation;
  * @see https://docs.imgix.com/apis/rendering/size/fit
  *
  * @ImageToolkitOperation(
- *   id = "imgix_resize",
- *   toolkit = "imgix",
- *   operation = "resize",
- *   label = @Translation("Resize"),
- *   description = @Translation("Resizes an image to the given dimensions (ignoring aspect ratio).")
+ *     id = "imgix_resize",
+ *     toolkit = "imgix",
+ *     operation = "resize",
+ *     label = @Translation("Resize"),
+ *     description = @Translation("Resizes an image to the given dimensions (ignoring aspect ratio).")
  * )
  */
 class Resize extends ImgixImageToolkitOperationBase
@@ -35,10 +35,10 @@ class Resize extends ImgixImageToolkitOperationBase
 
         // Fail when width or height are 0 or negative.
         if ($arguments['width'] <= 0) {
-            throw new \InvalidArgumentException("Invalid width ('{$arguments['width']}') specified for the image 'resize' operation");
+            throw new \InvalidArgumentException(sprintf('Invalid width (\'%s\') specified for the image \'resize\' operation', $arguments['width']));
         }
         if ($arguments['height'] <= 0) {
-            throw new \InvalidArgumentException("Invalid height ('{$arguments['height']}') specified for the image 'resize' operation");
+            throw new \InvalidArgumentException(sprintf('Invalid height (\'%d\') specified for the image \'resize\' operation', $arguments['height']));
         }
 
         return $arguments;

@@ -8,9 +8,9 @@ use Drupal\image\ConfigurableImageEffectBase;
 
 /**
  * @ImageEffect(
- *   id = "imgix_param",
- *   label = @Translation("Apply Imgix parameter"),
- *   description = @Translation("Applies a certain Imgix parameter."),
+ *     id = "imgix_param",
+ *     label = @Translation("Apply Imgix parameter"),
+ *     description = @Translation("Applies a certain Imgix parameter."),
  * )
  */
 class ImgixParamImageEffect extends ConfigurableImageEffectBase

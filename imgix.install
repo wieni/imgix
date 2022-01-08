@@ -100,7 +100,7 @@ function imgix_update_8005(): void
         $newFieldsList = [];
         $fieldStorage = FieldStorageConfig::loadByName($entityTypeId, $fieldName);
 
-        if (is_null($fieldStorage)) {
+        if ($fieldStorage === null) {
             return;
         }
 
@@ -148,7 +148,7 @@ function imgix_update_8005(): void
         }
 
         // Restore existing data in new table.
-        if (!is_null($currentRows)) {
+        if ($currentRows !== null) {
             foreach ($currentRows as $row) {
                 $query = sprintf(
                     'INSERT IGNORE INTO {%s} (%s) VALUES (:values[])',

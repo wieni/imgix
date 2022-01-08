@@ -5,7 +5,6 @@ namespace Drupal\imgix\Entity;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\imgix\Plugin\ImageToolkit\ImgixToolkit;
-use Drupal\imgix\Plugin\ImageToolkit\ImgixToolkitInterface;
 use Imgix\UrlBuilder;
 
 class ImgixImageStyle extends ImageStyle
@@ -18,7 +17,7 @@ class ImgixImageStyle extends ImageStyle
         return $uri;
     }
 
-    public function buildUrl($uri, $clean_urls = NULL)
+    public function buildUrl($uri, $clean_urls = null)
     {
         /** @var ImageInterface $image */
         $image = \Drupal::service('image.factory')->get($uri);
