@@ -4,10 +4,5 @@ services:
         factory: logger.factory:get
         arguments: ['imgix']
 
-    imgix.manager:
-        class: Drupal\imgix\ImgixManager
-        arguments:
-            - '@imgix.image_style_factory'
-
     imgix.image_style_factory:
         class: Drupal\imgix\ImgixImageStyleFactory
