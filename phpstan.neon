@@ -1,0 +1,8 @@
+includes:
+	- vendor/wieni/wmcodestyle/phpstan/custom-rules.neon
+	- vendor/wieni/wmcodestyle/phpstan/drupal-module.neon
+
+parameters:
+    scanDirectories:
+        - src
+        - vendor/drupal
